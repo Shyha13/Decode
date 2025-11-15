@@ -1,39 +1,42 @@
 package org.firstinspires.ftc.teamcode.robot.subsystems;
 
+import com.arcrobotics.ftclib.command.Subsystem;
 import com.qualcomm.robotcore.hardware.CRServo;
+import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.teamcode.utils.constants.BlockerConstants;
-import org.firstinspires.ftc.teamcode.utils.constants.KickerConstants;
+import org.firstinspires.ftc.teamcode.utils.constants.IntakeConstants;
 
-public class Blocker {
-        public Servo servo;
-        public org.firstinspires.ftc.teamcode.robot.subsystems.Blocker.BlockerState state;
-        public Blocker(Servo servo) {
-            this.servo = servo;
-            state = org.firstinspires.ftc.teamcode.robot.subsystems.Blocker.BlockerState.BLOCKED;
-        }
+public class Blocker implements Subsystem {
+    public BlockerState state;
+    public Servo blockerServo;
 
-        public void setState(org.firstinspires.ftc.teamcode.robot.subsystems.Blocker.BlockerState state) {
-            this.state = state;
-            switch (state) {
-                case BLOCKED:
-                    servo.setPosition(BlockerConstants.Blocked);
-                    break;
-                case UNBLOCKED:
-                default:
-                    servo.setPosition(BlockerConstants.Unblocked);
-                    break;
-            }
-        }
+    public Blocker(Servo blockerServo) {
+        this.blockerServo = blockerServo;
+        state = BlockerState.BLOCKED;
+    }
 
-        public org.firstinspires.ftc.teamcode.robot.subsystems.Blocker.BlockerState getState() {
-            return state;
+    public void setState(BlockerState state){
+        this.state = state;
+        switch (state){
+            case BLOCKED:
+                blockerServo.setPosition(BlockerConstants.Blocked);
+                break;
+            case UNBLOCKED:
+                blockerServo.setPosition(BlockerConstants.Unblocked);
+                break;
+            default:
+                blockerServo.setPosition(BlockerConstants.Blocked);
+                break;
         }
+    }
 
-        public enum BlockerState {
-            BLOCKED, UNBLOCKED
-        }
+    public BlockerState getState(){
+        return state;
+    }
+    public enum BlockerState{
+        BLOCKED, UNBLOCKED;
     }
 
 }

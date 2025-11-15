@@ -5,6 +5,7 @@ import static org.firstinspires.ftc.robotcore.external.BlocksOpModeCompanion.har
 import com.acmerobotics.dashboard.config.Config;
 import com.arcrobotics.ftclib.command.CommandScheduler;
 import com.pedropathing.follower.Follower;
+import com.pedropathing.localization.Pose;
 import com.qualcomm.hardware.lynx.LynxModule;
 import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -12,7 +13,9 @@ import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
+import com.qualcomm.robotcore.util.ElapsedTime;
 
+import org.firstinspires.ftc.teamcode.pedroPathing.constants.AutoConstants;
 import org.firstinspires.ftc.teamcode.pedroPathing.constants.FConstants;
 import org.firstinspires.ftc.teamcode.pedroPathing.constants.LConstants;
 import org.firstinspires.ftc.teamcode.robot.subsystems.Blocker;
@@ -23,6 +26,7 @@ import org.firstinspires.ftc.teamcode.robot.subsystems.Turret;
 import org.firstinspires.ftc.teamcode.utils.MyTelem;
 
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 @Config
 public class Robot {
@@ -32,10 +36,10 @@ public class Robot {
 
     // hardware stuff, servos, motors, etc.
     DcMotorEx backLeftMotor, backRightMotor, frontLeftMotor, frontRightMotor;
-    DcMotorEx topShooterMotor, bottomShooterMotor;
+    DcMotorEx topShooterMotor, bottomShooterMotor, counterRoller;
     DcMotorEx intakeMotor;
     Servo hoodServo;
-    Servo turretLeftServo, turretRightServo;
+    Servo turretLeftServo, turretRightServo, blockerServo;
     CRServo kickerRightServo;
 
     // all subsystem classes
@@ -46,16 +50,32 @@ public class Robot {
     public Kicker kicker;
     public Blocker blocker;
 
+    public Pose currentPose;
+    public boolean holding;
+    public boolean red;
+    public static double voltage = 12;
+    private ElapsedTime timer;
+    private double previousVoltageTime;
+    public Robot(HardwareMap hm, boolean isAuto, String color){
+        this(hm, isAuto);
+        red = color.equals("RED");
+    }
     public Robot (HardwareMap hm, boolean isAuto) {
+        timer.reset();
+        previousVoltageTime = timer.time(TimeUnit.MILLISECONDS);
+        CommandScheduler.getInstance().reset();
         auto = isAuto;
         follower = new Follower(hm, FConstants.class, LConstants.class);
 //        follower.breakFollowing();
-
+        currentPose = AutoConstants.finalPose;
+        follower.setStartingPose(currentPose);
         topShooterMotor = hm.get(DcMotorEx.class, "topShooter");
         bottomShooterMotor = hm.get(DcMotorEx.class, "bottomShooter");
+        counterRoller = hm.get(DcMotorEx.class, "counterRoller");
         intakeMotor = hm.get(DcMotorEx.class, "intake");
         turretLeftServo = hm.get(Servo.class, "turretLeftServo");
         turretRightServo = hm.get(Servo.class, "turretRightServo");
+        blockerServo = hm.get(Servo.class, "BlockerServo");
 //        hoodServo = hm.get(Servo.class, "hoodServo");
 //        kickerLeftServo = hm.get(CRServo.class, "kickerLeftServo");
         kickerRightServo = hm.get(CRServo.class, "kickerRightServo");
@@ -82,9 +102,10 @@ public class Robot {
 
         //declare all subsystem objects
         intake = new Intake(intakeMotor);
-        shooter = new Shooter(topShooterMotor, bottomShooterMotor, hoodServo);
+        shooter = new Shooter(topShooterMotor, bottomShooterMotor, counterRoller, hoodServo);
         turret = new Turret(turretLeftServo, turretRightServo);
         kicker = new Kicker(kickerRightServo);
+        blocker = new Blocker(blockerServo);
 
         //register subsystems
         CommandScheduler.getInstance().registerSubsystem(intake, shooter, turret); //kicker
@@ -93,6 +114,8 @@ public class Robot {
         for (LynxModule hub : hubs) {
             hub.setBulkCachingMode(LynxModule.BulkCachingMode.MANUAL);
         }
+
+        voltage = hm.voltageSensor.iterator().next().getVoltage();
     }
 
     public void update(){
@@ -111,6 +134,15 @@ public class Robot {
         for(LynxModule hub : hubs){
             hub.clearBulkCache();
         }
+
+        if(!holding)
+            currentPose = follower.getPose();
+
+        if(timer.time(TimeUnit.MILLISECONDS) - previousVoltageTime > 1000){
+            previousVoltageTime = timer.time(TimeUnit.MILLISECONDS);
+            voltage = hardwareMap.voltageSensor.iterator().next().getVoltage();
+        }
+        MyTelem.addData("Current Pose", currentPose);
         MyTelem.update();
     }
 
@@ -122,4 +154,15 @@ public class Robot {
         }
     }
 
+    public void holding(){
+        follower.holdPoint(currentPose);
+        holding = true;
+    }
+
+    public void stopHolding(){
+        follower.breakFollowing();
+        follower.startTeleopDrive();
+        follower.setMaxPower(1);
+        holding = false;
+    }
 }

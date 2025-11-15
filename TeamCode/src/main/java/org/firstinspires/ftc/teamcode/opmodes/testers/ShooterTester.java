@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode.opmodes.testers;
 import com.acmerobotics.dashboard.config.Config;
 import com.arcrobotics.ftclib.gamepad.GamepadEx;
 import com.arcrobotics.ftclib.gamepad.GamepadKeys;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.OpModeRegistrar;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
@@ -22,7 +23,7 @@ public class ShooterTester extends LinearOpMode {
         Robot robot = new Robot(hardwareMap, false);
         GamepadEx gp1 = new GamepadEx(gamepad1);
 
-        gp1.getGamepadButton(GamepadKeys.Button.LEFT_BUMPER).whenReleased(new ShooterCommand(robot, Shooter.ShooterState.FAR));
+        gp1.getGamepadButton(GamepadKeys.Button.LEFT_BUMPER).whenPressed(new ShooterCommand(robot, Shooter.ShooterState.FAR));
         gp1.getGamepadButton(GamepadKeys.Button.LEFT_BUMPER).whenReleased(new ShooterCommand(robot, Shooter.ShooterState.STOP));
         gp1.getGamepadButton(GamepadKeys.Button.RIGHT_BUMPER).whenPressed(new ShooterCommand(robot, Shooter.ShooterState.CLOSE));
         gp1.getGamepadButton(GamepadKeys.Button.RIGHT_BUMPER).whenReleased(new ShooterCommand(robot, Shooter.ShooterState.STOP));

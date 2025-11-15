@@ -19,11 +19,11 @@ public class Turret implements Subsystem {
         switch (state){
             case FRONT:
                 turretLeftServo.setPosition(TurretConstants.turretForwardPosition);
-                turretRightServo.setPosition(1 - TurretConstants.turretForwardPosition);
+                turretRightServo.setPosition(TurretConstants.turretForwardPosition);
                 break;
             case BACK:
                 turretLeftServo.setPosition(TurretConstants.turretBackPosition);
-                turretRightServo.setPosition(1 - TurretConstants.turretBackPosition);
+                turretRightServo.setPosition(TurretConstants.turretBackPosition);
             case MATH:
                 break;
         }

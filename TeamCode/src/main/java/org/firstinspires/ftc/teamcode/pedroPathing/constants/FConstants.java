@@ -41,7 +41,7 @@ public class FConstants {
         FollowerConstants.secondaryDrivePIDFCoefficients.setCoefficients(0.007,0,0.0003,0.6,0); // Not being used, @see useSecondaryDrivePID
 
         FollowerConstants.zeroPowerAccelerationMultiplier = 4;
-        FollowerConstants.centripetalScaling = 0.0005;
+        FollowerConstants.centripetalScaling = 0.0006;
 
         FollowerConstants.useBrakeModeInTeleOp = true;
 

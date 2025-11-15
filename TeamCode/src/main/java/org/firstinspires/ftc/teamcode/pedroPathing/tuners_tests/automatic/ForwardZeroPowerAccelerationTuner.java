@@ -14,6 +14,7 @@ import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 import com.pedropathing.follower.FollowerConstants;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
@@ -48,6 +49,7 @@ import org.firstinspires.ftc.teamcode.pedroPathing.constants.LConstants;
  */
 @Config
 @Autonomous(name = "Forward Zero Power Acceleration Tuner", group = "Automatic Tuners")
+@Disabled
 public class ForwardZeroPowerAccelerationTuner extends OpMode {
     private ArrayList<Double> accelerations = new ArrayList<>();
 
