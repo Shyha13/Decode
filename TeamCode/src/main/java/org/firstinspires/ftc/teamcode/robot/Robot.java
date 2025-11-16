@@ -13,6 +13,7 @@ import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.hardware.VoltageSensor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
+import org.firstinspires.ftc.teamcode.opmodes.prod.CloseAutoBlue;
 import org.firstinspires.ftc.teamcode.pedroPathing.constants.AutoConstants;
 import org.firstinspires.ftc.teamcode.pedroPathing.constants.FConstants;
 import org.firstinspires.ftc.teamcode.pedroPathing.constants.LConstants;
@@ -49,7 +50,7 @@ public class  Robot {
     public Kicker kicker;
     public Blocker blocker;
 
-    public static Pose currentPose;
+    public static Pose currentPose = CloseAutoBlue.autoEndPose;
     public boolean holding;
     public static boolean red;
     public static double voltage = 12;

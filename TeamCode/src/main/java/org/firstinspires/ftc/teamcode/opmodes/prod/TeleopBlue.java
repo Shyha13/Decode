@@ -28,6 +28,7 @@ import org.firstinspires.ftc.teamcode.robot.subsystems.Shooter;
 import org.firstinspires.ftc.teamcode.robot.subsystems.Turret;
 import org.firstinspires.ftc.teamcode.utils.MyTelem;
 
+import static org.firstinspires.ftc.teamcode.opmodes.prod.CloseAutoBlue.autoEndPose;
 @TeleOp(name = "Teleop Blue", group = "Comp")
 public class TeleopBlue extends LinearOpMode {
     @Override
