@@ -1,6 +1,6 @@
 package org.firstinspires.ftc.teamcode.pedroPathing.constants;
 
-import com.pedropathing.localization.Pose;
+import com.pedropathing.geometry.Pose;
 
 public class CloseSideAutoPoseData {
     // Blue-side coordinate definitions (field center at 72,72, field is 144x144)

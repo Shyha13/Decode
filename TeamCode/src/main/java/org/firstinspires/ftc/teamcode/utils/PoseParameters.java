@@ -1,6 +1,6 @@
 package org.firstinspires.ftc.teamcode.utils;
 
-import com.pedropathing.localization.Pose;
+import com.pedropathing.geometry.Pose;
 
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
