@@ -3,9 +3,9 @@ package org.firstinspires.ftc.teamcode.robot.commands.botcommands;
 import com.arcrobotics.ftclib.command.CommandBase;
 
 import com.pedropathing.follower.Follower;
-import com.pedropathing.geometry.Pose;
-import com.pedropathing.paths.Path;
-import com.pedropathing.paths.PathChain;
+import com.pedropathing.localization.Pose;
+import com.pedropathing.pathgen.Path;
+import com.pedropathing.pathgen.PathChain;
 
 public class FollowPathCommand extends CommandBase {
     private final Follower follower;

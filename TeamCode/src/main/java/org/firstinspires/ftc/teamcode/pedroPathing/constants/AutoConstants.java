@@ -1,7 +1,7 @@
 package org.firstinspires.ftc.teamcode.pedroPathing.constants;
 
 import com.acmerobotics.dashboard.config.Config;
-import com.pedropathing.geometry.Pose;
+import com.pedropathing.localization.Pose;
 
 @Config
 public class AutoConstants {

@@ -5,7 +5,7 @@ import static com.sun.tools.javac.api.DiagnosticFormatter.PositionKind.OFFSET;
 import static org.firstinspires.ftc.teamcode.utils.constants.TurretConstants.SLOPE;
 
 import com.arcrobotics.ftclib.command.Subsystem;
-import com.pedropathing.geometry.Pose;
+import com.pedropathing.localization.Pose;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.Range;
 
