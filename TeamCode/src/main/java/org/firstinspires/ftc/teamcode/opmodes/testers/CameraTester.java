@@ -2,115 +2,113 @@ package org.firstinspires.ftc.teamcode.opmodes.testers;
 
 import android.util.Size;
 
+import com.arcrobotics.ftclib.controller.PIDController;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
-
-import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
-import org.firstinspires.ftc.vision.VisionPortal;
-import org.firstinspires.ftc.vision.apriltag.AprilTagProcessor;
-import org.firstinspires.ftc.vision.apriltag.AprilTagDetection;
-
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.Range;
 
+import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
+import org.firstinspires.ftc.robotcore.external.navigation.Pose2D;
+import org.firstinspires.ftc.teamcode.utils.MyTelem;
+import org.firstinspires.ftc.teamcode.utils.constants.CameraConstants;
+import org.firstinspires.ftc.teamcode.utils.constants.ShooterConstants;
+import org.firstinspires.ftc.teamcode.utils.constants.TurretConstants;
+import org.firstinspires.ftc.vision.VisionPortal;
+import org.firstinspires.ftc.vision.apriltag.AprilTagDetection;
+import org.firstinspires.ftc.vision.apriltag.AprilTagProcessor;
+
 import java.util.List;
 
-@TeleOp(name = "AprilTag Turret Tracker", group = "Vision")
+@TeleOp(name = "AprilTag Detector", group = "Vision")
 public class CameraTester extends LinearOpMode {
 
-    private VisionPortal portal;
-    private AprilTagProcessor tags;
+    private VisionPortal visionPortal;
+    private AprilTagProcessor aprilTagProcessor;
+    private WebcamName camera;
+    public static Boolean blue, red;
+    public Servo turretLeftServo, turretRightServo;
+    PIDController turretPID;
 
-    Servo left, right;
 
-    // Turret mapping
-    double OFFSET = 0.5;
-    double SLOPE = 0.0032222;
-    double smooth = 0.85;
+    private void setTurretPostition(double pos){
+        turretLeftServo.setPosition(pos);
+        turretRightServo.setPosition(pos);
+    }
+    private double getTurretPostition(){
+        return turretLeftServo.getPosition();
+    }
 
-    // Scanning mode (when tag lost)
-    double scanSpeed = 0.002;       // servo speed per loop
-    boolean scanRight = true;
+
 
     @Override
     public void runOpMode() {
+        blue = true;
+        turretPID = new PIDController(CameraConstants.p, CameraConstants.i, CameraConstants.d);
+        MyTelem.init(telemetry);
+        initAprilTagProccessor(aprilTagProcessor, camera, CameraConstants.camaeraSizeX, CameraConstants.camaeraSizeY);
+        turretLeftServo = hardwareMap.get(Servo.class, "turretLeftServo");
+        turretRightServo = hardwareMap.get(Servo.class, "turretRightServo");
+        camera = hardwareMap.get(WebcamName.class, "cameraOne");
 
-        left  = hardwareMap.get(Servo.class, "turretLeftServo");
-        right = hardwareMap.get(Servo.class, "turretRightServo");
+        MyTelem.addData("Camera initialized", "");
+        MyTelem.update();
 
-        WebcamName cam = hardwareMap.get(WebcamName.class, "camOne");
-
-        tags = new AprilTagProcessor.Builder()
-                .setDrawAxes(true)
-                .setDrawCubeProjection(true)
-                .setDrawTagID(true)
-                .setDrawTagOutline(true)
-                .build();
-
-        portal = new VisionPortal.Builder()
-                .setCamera(cam)
-                .addProcessor(tags)
-                .setCameraResolution(new Size(1280, 720))
-                .setStreamFormat(VisionPortal.StreamFormat.MJPEG)
-                .enableLiveView(true)
-                .build();
-
-        telemetry.addLine("READY — Point at tag");
-        telemetry.update();
         waitForStart();
 
         while (opModeIsActive()) {
+            List<AprilTagDetection> currentDetections = aprilTagProcessor.getDetections();
 
-            List<AprilTagDetection> dets = tags.getDetections();
-
-            if (!dets.isEmpty()) {
-                AprilTagDetection det = dets.get(0);  // track first tag
-
-                double x = det.ftcPose.x;
-                double z = det.ftcPose.z;
-
-                // horizontal bearing: left/right
-                double yawDeg = Math.toDegrees(Math.atan2(x, z));
-
-                // convert to servo pos
-                double target = OFFSET + SLOPE * yawDeg;
-                target = Range.clip(target, 0, 1);
-
-                double old = left.getPosition();
-                double newPos = smooth * old + (1 - smooth) * target;
-
-                left.setPosition(newPos);
-                right.setPosition(newPos);
-
-                // reset scan when tag seen
-                scanRight = (yawDeg > 0);
-
-                telemetry.addData("Mode", "Tracking tag");
-                telemetry.addData("Yaw (deg)", yawDeg);
-                telemetry.addData("ServoPos", newPos);
+            if (currentDetections.isEmpty()) {
+                MyTelem.addData("No AprilTags detected.", "");
             }
             else {
-                // ========= SCANNING (tag lost) =========
-                double pos = left.getPosition();
+                MyTelem.addData("Detected Tags:", currentDetections.size());
+                for (AprilTagDetection detection : currentDetections) {
+                    // TODO: ADD whether April tag is blue or red.
+                    // TODO: ADD PID for Tracking using turret servo
+                    // Todo: ADD rpm adjusting using Interpolation
+                    // TODO: Make this a METHOD with parameters (bool blu or red, servo 1, servo 2)
 
-                if (scanRight) pos += scanSpeed;
-                else           pos -= scanSpeed;
-
-                // bounce at edges
-                if (pos > 1.0) { pos = 1.0; scanRight = false; }
-                if (pos < 0.0) { pos = 0.0; scanRight = true; }
-
-                left.setPosition(pos);
-                right.setPosition(pos);
-
-                telemetry.addData("Mode", "Scanning to find tag");
-                telemetry.addData("ServoPos", pos);
+                    double x = detection.ftcPose.x;
+                    double y = detection.ftcPose.y;
+                    double z = detection.ftcPose.z;
+                    MyTelem.addData("ID: ", detection.id);
+                    MyTelem.addData("Center: ","("+x+","+y+","+z+")");
+                    MyTelem.addData("Pose X", x);
+                    MyTelem.addData("Pose Y", y);
+                    MyTelem.addData("Pose Z", z);
+                    MyTelem.addData("Dist: ", detection.ftcPose.range);
+                    MyTelem.addData("Elevation: ", detection.ftcPose.elevation);
+                    if(blue && detection.id == CameraConstants.blueID){
+                        MyTelem.addData("detecting blue", "");
+                        turretPID.setPID(CameraConstants.p,CameraConstants.i,CameraConstants.d);
+                        double correction = turretPID.calculate(x,0);
+                        correction = Range.clip(getTurretPostition()+correction, 0, 1);
+                        setTurretPostition(correction);
+                    }
+                }
             }
 
-            telemetry.update();
-            sleep(20);
+            MyTelem.update();
         }
 
-        portal.close();
+        visionPortal.close();
     }
+
+    public void initAprilTagProccessor(AprilTagProcessor processor, WebcamName camera, int x, int y) {
+        processor = new AprilTagProcessor.Builder()
+                .setDrawAxes(true)
+                .setDrawTagID(true)
+                .setDrawCubeProjection(true)
+                .setDrawTagOutline(true)
+                .build();
+
+        visionPortal = new VisionPortal.Builder()
+                .setCamera(camera)
+                .addProcessor(processor)
+                .setCameraResolution(new Size(x,y))
+                .build();
+    }
+
 }

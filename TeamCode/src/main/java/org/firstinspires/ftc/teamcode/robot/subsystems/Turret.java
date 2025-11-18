@@ -56,11 +56,6 @@ public class Turret implements Subsystem {
     private void pointToGoal() {
         Pose cur  = Robot.currentPose;
         Pose goal = Robot.getGoalPose();
-        if (cur == null || goal == null) {
-            setServoPos(TurretConstants.turretForwardPosition);
-            return;
-        }
-
         double fieldAngle = Math.atan2(
                 goal.getY() - cur.getY(),
                 goal.getX() - cur.getX()
@@ -74,8 +69,8 @@ public class Turret implements Subsystem {
         if (servoPos < 0.0) servoPos = 0.0;
         setServoPos(servoPos);
         MyTelem.addData("Turret Servo Position", servoPos);
-        MyTelem.addData("Turret Angle", angleDeg);}
-
+        MyTelem.addData("Turret Angle", angleDeg);
+    }
 
     public TurretState getState() {
         return state;

@@ -30,7 +30,8 @@ public class Constants {
                     new FilteredPIDFCoefficients(0.015, 0, 0.0006, 0.6, 0)
             )
             .secondaryTranslationalPIDFCoefficients(
-                    new PIDFCoefficients(0.15, 0, 0.0085, 0))
+                    new PIDFCoefficients(0.15, 0, 0.0085, 0)
+            )
             .secondaryHeadingPIDFCoefficients(new PIDFCoefficients(1.3, 0, 0.19, 0))
             .secondaryDrivePIDFCoefficients(
                     new FilteredPIDFCoefficients(0.007, 0, 0.0003, 0.6, 0)
