@@ -19,6 +19,7 @@ public class TransferCommand extends SequentialCommandGroup {
     public static int firstBallWaitFar = 1000;
     public static int kickerWait = 0;
     public static int intakeWait = 1800;
+    public static int blockerWait = 300;
     public TransferCommand(Robot robot, boolean shortSide, boolean math){
         if(robot.auto){
             intakeWait += 500;
@@ -26,6 +27,7 @@ public class TransferCommand extends SequentialCommandGroup {
         if (shortSide && !math) {
             addCommands(
                     new ShooterCommand(robot, Shooter.ShooterState.CLOSE),
+                    new WaitCommand(blockerWait),
                     new BlockerCommand(robot, Blocker.BlockerState.UNBLOCKED),
                     new WaitCommand(firstBallWaitClose),
                     new KickerCommand(robot, Kicker.KickerState.ON),
@@ -36,6 +38,7 @@ public class TransferCommand extends SequentialCommandGroup {
         else if(!shortSide && !math) {
             addCommands(
                     new ShooterCommand(robot, Shooter.ShooterState.FAR),
+                    new WaitCommand(blockerWait),
                     new BlockerCommand(robot, Blocker.BlockerState.UNBLOCKED),
                     new WaitCommand(firstBallWaitFar),
                     new KickerCommand(robot, Kicker.KickerState.ON),
@@ -45,6 +48,7 @@ public class TransferCommand extends SequentialCommandGroup {
         } else if(math){
             addCommands(
                     new ShooterCommand(robot, Shooter.ShooterState.MATH),
+                    new WaitCommand(blockerWait),
                     new BlockerCommand(robot, Blocker.BlockerState.UNBLOCKED),
                     new WaitCommand(firstBallWaitFar),
                     new KickerCommand(robot, Kicker.KickerState.ON),

@@ -8,6 +8,7 @@ import com.qualcomm.hardware.lynx.LynxModule;
 import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.hardware.VoltageSensor;
@@ -36,7 +37,7 @@ public class  Robot {
     // hardware stuff, servos, motors, etc.
     DcMotorEx backLeftMotor, backRightMotor, frontLeftMotor, frontRightMotor;
     DcMotorEx topShooterMotor, /*bottomShooterMotor,*/ counterRoller;
-    DcMotorEx intakeMotor;
+    DcMotorEx intakeMotor, intakeMotor2;
     Servo hoodServo;
     Servo turretLeftServo, turretRightServo, blockerServo;
     CRServo kickerRightServo, kickerLeftServo;
@@ -50,7 +51,7 @@ public class  Robot {
     public Kicker kicker;
     public Blocker blocker;
 
-    public static Pose currentPose;
+    public static Pose currentPose = new Pose(0,0,0);
     public boolean holding;
     public static boolean red;
     public static double voltage = 12;
@@ -71,6 +72,7 @@ public class  Robot {
         topShooterMotor = hm.get(DcMotorEx.class, "topShooter");
         counterRoller = hm.get(DcMotorEx.class, "counterRoller");
         intakeMotor = hm.get(DcMotorEx.class, "intake");
+        intakeMotor2 = hm.get(DcMotorEx.class, "intake2");
         turretLeftServo = hm.get(Servo.class, "turretLeftServo");
         turretRightServo = hm.get(Servo.class, "turretRightServo");
         blockerServo = hm.get(Servo.class, "BlockerServo");
@@ -81,8 +83,10 @@ public class  Robot {
         topShooterMotor.setMode(DcMotorEx.RunMode.RUN_WITHOUT_ENCODER);
         counterRoller.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         if(!auto){
-            MyTelem.addData("TeleOp Starting Pose", currentPose);
-            follower.setStartingPose(currentPose);
+            if(currentPose != null)
+                follower.setStartingPose(currentPose);
+            else
+                follower.setStartingPose(new Pose(0,0,0));
         }
         // We can in pedro for this as well.
         //        backLeft = hm.get(DcMotorEx.class, "backLeft");
@@ -99,7 +103,7 @@ public class  Robot {
         //ie. zeropowermode, etc.
 
         //declare all subsystem objects
-        intake = new Intake(intakeMotor);
+        intake = new Intake(intakeMotor, intakeMotor2);
         shooter = new Shooter(topShooterMotor, counterRoller, hoodServo);
         turret = new Turret(turretLeftServo, turretRightServo);
         kicker = new Kicker(kickerRightServo, kickerLeftServo);

@@ -81,6 +81,11 @@ public class Shooter implements Subsystem {
         //156.95: 2280, 5426.5
         //141.15: 2180, 5188.4
         //y=0.0385207x^{2}+1.30815x+1181.56736
+
+
+        //84.96: 1700, 4046
+        //96.09: 1750,
+
         double speed = 0.0385207 * distance * distance + 1.30815 * distance + 1181.56736;
         MyTelem.addData("speed", speed);
         return speed;

@@ -2,14 +2,17 @@ package org.firstinspires.ftc.teamcode.robot.subsystems;
 
 import com.arcrobotics.ftclib.command.Subsystem;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 
 import org.firstinspires.ftc.teamcode.utils.constants.IntakeConstants;
 
 public class Intake implements Subsystem {
-    DcMotorEx intakeMotor;
+    DcMotorEx intakeMotor, intakeMotor2;
     public IntakeState state;
-    public Intake(DcMotorEx intakeMotor){
+    public Intake(DcMotorEx intakeMotor, DcMotorEx intakeMotor2){
         this.intakeMotor = intakeMotor;
+        this.intakeMotor2 = intakeMotor2;
+        intakeMotor2.setDirection(DcMotorSimple.Direction.REVERSE);
     }
 
     public void setState(IntakeState state){
@@ -17,15 +20,19 @@ public class Intake implements Subsystem {
         switch (state){
             case ON:
                 intakeMotor.setPower(IntakeConstants.forwardPower);
+                intakeMotor2.setPower(IntakeConstants.forwardPower);
                 break;
             case OFF:
                 intakeMotor.setPower(IntakeConstants.offPower);
+                intakeMotor2.setPower(IntakeConstants.offPower);
                 break;
             case REV:
                 intakeMotor.setPower(IntakeConstants.backwardPower);
+                intakeMotor2.setPower(IntakeConstants.backwardPower);
                 break;
             default:
                 intakeMotor.setPower(0);
+                intakeMotor2.setPower(0);
                 break;
         }
     }
