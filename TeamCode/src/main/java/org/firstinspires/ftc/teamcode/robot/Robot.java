@@ -1,5 +1,8 @@
 package org.firstinspires.ftc.teamcode.robot;
 
+import static org.firstinspires.ftc.teamcode.utils.constants.BotConstants.goalX;
+import static org.firstinspires.ftc.teamcode.utils.constants.BotConstants.goalY;
+
 import com.acmerobotics.dashboard.config.Config;
 import com.arcrobotics.ftclib.command.CommandScheduler;
 import com.pedropathing.follower.Follower;
@@ -14,6 +17,7 @@ import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.hardware.VoltageSensor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
+import org.firstinspires.ftc.robotcore.external.navigation.CurrentUnit;
 import org.firstinspires.ftc.teamcode.opmodes.prod.CloseAutoBlue;
 import org.firstinspires.ftc.teamcode.pedroPathing.constants.AutoConstants;
 import org.firstinspires.ftc.teamcode.pedroPathing.constants.FConstants;
@@ -37,7 +41,7 @@ public class  Robot {
     // hardware stuff, servos, motors, etc.
     DcMotorEx backLeftMotor, backRightMotor, frontLeftMotor, frontRightMotor;
     DcMotorEx topShooterMotor, /*bottomShooterMotor,*/ counterRoller;
-    DcMotorEx intakeMotor2;
+    DcMotorEx intakeMotor, intakeMotor2;
     Servo hoodServo;
     Servo turretLeftServo, turretRightServo, blockerServo;
     CRServo kickerRightServo, kickerLeftServo;
@@ -71,7 +75,7 @@ public class  Robot {
         follower = new Follower(hm, FConstants.class, LConstants.class);
         topShooterMotor = hm.get(DcMotorEx.class, "topShooter");
         counterRoller = hm.get(DcMotorEx.class, "counterRoller");
-//        intakeMotor = hm.get(DcMotorEx.class, "intake");
+        intakeMotor = hm.get(DcMotorEx.class, "intake");
         intakeMotor2 = hm.get(DcMotorEx.class, "intake2");
         turretLeftServo = hm.get(Servo.class, "turretLeftServo");
         turretRightServo = hm.get(Servo.class, "turretRightServo");
@@ -103,7 +107,7 @@ public class  Robot {
         //ie. zeropowermode, etc.
 
         //declare all subsystem objects
-        intake = new Intake(intakeMotor2);
+        intake = new Intake(intakeMotor, intakeMotor2);
         shooter = new Shooter(topShooterMotor, counterRoller, hoodServo);
         turret = new Turret(turretLeftServo, turretRightServo);
         kicker = new Kicker(kickerRightServo, kickerLeftServo);
@@ -150,6 +154,11 @@ public class  Robot {
 
         MyTelem.addData("distance from goal", getDistanceFromGoal());
         MyTelem.addData("Current Pose", currentPose);
+
+        MyTelem.addData("Intake Motor Current", intakeMotor2.getCurrent(CurrentUnit.AMPS));
+        MyTelem.addData("Shooter Motor Current", topShooterMotor.getCurrent(CurrentUnit.AMPS));
+        MyTelem.addData("Counter Roller Motor Current", counterRoller.getCurrent(CurrentUnit.AMPS));
+
         MyTelem.update();
     }
 
@@ -184,10 +193,10 @@ public class  Robot {
     }
     public static Pose getGoalPose(){
         if(red){
-            return new Pose(144, 144);
+            return new Pose(goalX, goalY);
         }
         else{
-            return new Pose(0, 144)
+            return new Pose(144 - goalX, goalY)
 ;        }
     }
 }
