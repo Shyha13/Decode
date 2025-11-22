@@ -7,20 +7,18 @@ import com.acmerobotics.dashboard.config.Config;
 import com.arcrobotics.ftclib.command.CommandScheduler;
 import com.pedropathing.follower.Follower;
 import com.pedropathing.localization.Pose;
+import com.pedropathing.pathgen.Point;
 import com.pedropathing.pathgen.Vector;
 import com.qualcomm.hardware.lynx.LynxModule;
 import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
-import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.hardware.VoltageSensor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.navigation.CurrentUnit;
-import org.firstinspires.ftc.teamcode.opmodes.prod.CloseAutoBlue;
-import org.firstinspires.ftc.teamcode.pedroPathing.constants.AutoConstants;
 import org.firstinspires.ftc.teamcode.pedroPathing.constants.FConstants;
 import org.firstinspires.ftc.teamcode.pedroPathing.constants.LConstants;
 import org.firstinspires.ftc.teamcode.robot.subsystems.Blocker;
@@ -40,7 +38,7 @@ public class  Robot {
     public boolean auto = false;
 
     public Follower follower;
-    public static Vector velocity;
+    public static Vector velocity = new Vector(new Point(0,0));
 
     // hardware stuff, servos, motors, etc.
     DcMotorEx backLeftMotor, backRightMotor, frontLeftMotor, frontRightMotor;
@@ -76,7 +74,7 @@ public class  Robot {
         previousVoltageTime = timer.time(TimeUnit.MILLISECONDS);
         CommandScheduler.getInstance().reset();
         auto = isAuto;
-        BotConstants.isMath = false;
+        BotConstants.isMath = true;
         TurretConstants.OFFSET = 0.5;
         follower = new Follower(hm, FConstants.class, LConstants.class);
         topShooterMotor = hm.get(DcMotorEx.class, "topShooter");
@@ -208,4 +206,20 @@ public class  Robot {
             return new Pose(144 - goalX, goalY)
 ;        }
     }
+
+    public static Pose getEffectiveCoordinates(){
+        double distance = Robot.getDistanceFromGoal();
+        Vector velocity = Robot.velocity;
+        double v_ball = 0;
+        double t = v_ball != 0 ? (distance / v_ball) : 0;
+        Pose current = Robot.currentPose;
+        double eff_x = current.getX();
+        double eff_y = current.getY();
+        return new Pose(eff_x, eff_y, current.getHeading());
+    }
+
+//    public static double getTimeOfFlight(double distance){
+//        distance, time
+//
+//    }
 }
