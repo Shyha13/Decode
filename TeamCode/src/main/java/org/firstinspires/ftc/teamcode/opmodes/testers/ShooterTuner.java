@@ -24,7 +24,7 @@ public class ShooterTuner extends LinearOpMode {
             MyTelem.addLine();
             MyTelem.addLine("--- COUNTER ROLLER ---");
             MyTelem.addData("Target RPM", ShooterConstants.tuningTestingCounterRollerRPM);
-            MyTelem.addData("At RPM", robot.shooter.counterRollerAtRPM());
+//            MyTelem.addData("At RPM", robot.shooter.counterRollerAtRPM());
             robot.update();
         }
         robot.stop();
