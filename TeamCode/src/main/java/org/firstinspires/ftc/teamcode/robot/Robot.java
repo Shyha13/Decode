@@ -76,7 +76,7 @@ public class  Robot {
         previousVoltageTime = timer.time(TimeUnit.MILLISECONDS);
         CommandScheduler.getInstance().reset();
         auto = isAuto;
-        BotConstants.isMath = true;
+        BotConstants.isMath = false;
         TurretConstants.OFFSET = 0.5;
         follower = new Follower(hm, FConstants.class, LConstants.class);
         topShooterMotor = hm.get(DcMotorEx.class, "topShooter");
