@@ -33,7 +33,6 @@ public class TransferCommand extends SequentialCommandGroup {
                     new KickerCommand(robot, Kicker.KickerState.ON),
                     new WaitCommand(kickerWait),
                     new IntakeCommand(robot, Intake.IntakeState.ON),
-                    new IntakeCommand(robot, Intake.IntakeState.SOLOBACK),
                     new WaitCommand(intakeWait)
             );
         }
@@ -60,7 +59,6 @@ public class TransferCommand extends SequentialCommandGroup {
                     new KickerCommand(robot, Kicker.KickerState.ON),
                     new WaitCommand(commandWait),
                     new IntakeCommand(robot, Intake.IntakeState.ON),
-                    new IntakeCommand(robot, Intake.IntakeState.SOLOBACK),
                     new WaitCommand(intakeWait)
             );
         }

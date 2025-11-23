@@ -5,6 +5,8 @@ import com.pedropathing.localization.Pose;
 
 @Config
 public class AutoConstants {
+    public static double startHeading = 156;
+    public static double MAX_TIME = 32;
     public static double shootingAngle = 180;
     public static int firstWait = 300;
     public static int secondWait = 700;
