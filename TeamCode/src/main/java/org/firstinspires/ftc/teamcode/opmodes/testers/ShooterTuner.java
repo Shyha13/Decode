@@ -9,7 +9,6 @@ import org.firstinspires.ftc.teamcode.robot.subsystems.Shooter;
 import org.firstinspires.ftc.teamcode.utils.MyTelem;
 import org.firstinspires.ftc.teamcode.utils.constants.ShooterConstants;
 
-@Config
 @TeleOp(name = "Shooter Tuner")
 public class ShooterTuner extends LinearOpMode {
     public void runOpMode(){
@@ -23,8 +22,6 @@ public class ShooterTuner extends LinearOpMode {
             MyTelem.addData("At RPM", robot.shooter.shooterAtRPM());
             MyTelem.addLine();
             MyTelem.addLine("--- COUNTER ROLLER ---");
-            MyTelem.addData("Target RPM", ShooterConstants.tuningTestingCounterRollerRPM);
-//            MyTelem.addData("At RPM", robot.shooter.counterRollerAtRPM());
             robot.update();
         }
         robot.stop();

@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.opmodes.testers;
 
+import com.arcrobotics.ftclib.command.CommandScheduler;
 import com.arcrobotics.ftclib.gamepad.GamepadEx;
 import com.arcrobotics.ftclib.gamepad.GamepadKeys;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
@@ -20,7 +21,7 @@ public class ManualTurretTester extends LinearOpMode {
         Robot robot = new Robot(hardwareMap, false);
 
         GamepadEx gp1 = new GamepadEx(gamepad1);
-        gp1.getGamepadButton(GamepadKeys.Button.A).whenPressed(new TurretCommand(robot, Turret.TurretState.FRONT));
+        CommandScheduler.getInstance().schedule(new TurretCommand(robot, Turret.TurretState.FRONT));
 
         waitForStart();
 

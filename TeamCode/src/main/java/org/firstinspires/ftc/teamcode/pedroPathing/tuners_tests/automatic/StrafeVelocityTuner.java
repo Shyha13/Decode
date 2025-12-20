@@ -47,9 +47,7 @@ import org.firstinspires.ftc.teamcode.pedroPathing.constants.LConstants;
  * @author Harrison Womack - 10158 Scott's Bots
  * @version 1.0, 3/13/2024
  */
-@Config
 @Autonomous(name = "Strafe Velocity Tuner", group = "Automatic Tuners")
-@Disabled
 public class StrafeVelocityTuner extends OpMode {
     private ArrayList<Double> velocities = new ArrayList<>();
 

@@ -15,7 +15,7 @@ import org.firstinspires.ftc.teamcode.pedroPathing.constants.LConstants;
  * @author Baron Henderson - 20077 The Indubitables
  * @version 2.0, 12/30/2024
  */
-
+@Disabled
 @TeleOp(name = "Example Field-Centric Teleop", group = "Examples")
 public class ExampleFieldCentricTeleop extends OpMode {
     private Follower follower;

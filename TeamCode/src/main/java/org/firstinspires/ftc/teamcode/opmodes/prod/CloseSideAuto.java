@@ -33,6 +33,7 @@ import org.firstinspires.ftc.teamcode.robot.subsystems.Shooter;
 import org.firstinspires.ftc.teamcode.robot.subsystems.Turret;
 import org.firstinspires.ftc.teamcode.utils.MyTelem;
 import org.firstinspires.ftc.teamcode.utils.constants.AutoConstants;
+import org.firstinspires.ftc.teamcode.utils.constants.BotConstants;
 import org.firstinspires.ftc.teamcode.utils.constants.CloseSideAutoPoseData;
 
 public class CloseSideAuto extends OpMode {
@@ -57,33 +58,43 @@ public class CloseSideAuto extends OpMode {
         CommandScheduler.getInstance().schedule(
                 new BlockerCommand(robot, Blocker.BlockerState.BLOCKED),
                 new TurretCommand(robot, Turret.TurretState.MATH)
-                );
+        );
 
         CommandGroupBase shootThree = new SequentialCommandGroup(
-                new TransferCommand(robot, TransferCommand.TransferCommandState.CLOSE),
+                new TransferCommand(robot),
                 new TransferCancelCommand(robot),
                 new IntakeCommand(robot, Intake.IntakeState.ON)
         );
 
         paths = new CloseSideAutoPaths(robot.follower, color);
+
+        BotConstants.BotState state = Robot.botState;
+        Shooter.ShooterState shooterState =
+                state == BotConstants.BotState.MATH ? Shooter.ShooterState.TESTING :
+                        state == BotConstants.BotState.MANUAL ? Shooter.ShooterState.CLOSE :
+                                Shooter.ShooterState.TESTING;
+
         auto = new SequentialCommandGroup(
                 new TurretCommand(robot, Turret.TurretState.MATH),
-                new ShooterCommand(robot, Shooter.ShooterState.CLOSE),
                 new IntakeCommand(robot, Intake.IntakeState.ON),
+                new ShooterCommand(robot, shooterState),
                 new FollowPathCommand(robot.follower, paths.Path1),
-                new ShooterCommand(robot, Shooter.ShooterState.CLOSE),
                 shootThree,
                 new IntakeCommand(robot, Intake.IntakeState.ON),
-                new TurretCommand(robot, Turret.TurretState.FRONT),
-                new FollowPathCommand(robot.follower, paths.Path2),
+                new ParallelCommandGroup(
+                    new TurretCommand(robot, Turret.TurretState.FRONT),
+                    new FollowPathCommand(robot.follower, paths.Path2)
+                ),
                 new WaitCommand(intakeBallWait),
 //                new FollowPathCommand(robot.follower, paths.LeverPath),
 //                new IntakeCommand(robot, Intake.IntakeState.OFF),
 //                new WaitCommand(1000),
 //                new IntakeCommand(robot, Intake.IntakeState.ON),
-                new TurretCommand(robot, Turret.TurretState.MATH),
-                new FollowPathCommand(robot.follower, paths.Path3),
-                new ShooterCommand(robot, Shooter.ShooterState.CLOSE),
+                new ParallelCommandGroup(
+                    new TurretCommand(robot, Turret.TurretState.MATH),
+                    new ShooterCommand(robot, shooterState),
+                    new FollowPathCommand(robot.follower, paths.Path3)
+                ),
                 shootThree,
                 new IntakeCommand(robot, Intake.IntakeState.ON),
                 new ParallelCommandGroup(
@@ -93,9 +104,9 @@ public class CloseSideAuto extends OpMode {
                 new WaitCommand(intakeBallWait),
                 new ParallelCommandGroup(
                     new TurretCommand(robot, Turret.TurretState.MATH),
+                    new ShooterCommand(robot, shooterState),
                     new FollowPathCommand(robot.follower, paths.Path5)
                 ),
-                new ShooterCommand(robot, Shooter.ShooterState.CLOSE),
                 shootThree,
                 new IntakeCommand(robot, Intake.IntakeState.ON),
                 new ParallelCommandGroup(
@@ -104,10 +115,10 @@ public class CloseSideAuto extends OpMode {
                 ),
                 new WaitCommand(intakeBallWait),
                 new ParallelCommandGroup(
-                new TurretCommand(robot, Turret.TurretState.MATH),
-                new FollowPathCommand(robot.follower, paths.Path7)
+                    new TurretCommand(robot, Turret.TurretState.MATH),
+                    new ShooterCommand(robot, shooterState),
+                    new FollowPathCommand(robot.follower, paths.Path7)
                 ),
-                new ShooterCommand(robot, Shooter.ShooterState.CLOSE),
                 shootThree
         );
 
@@ -132,10 +143,7 @@ public class CloseSideAuto extends OpMode {
         timer.reset();
         CommandScheduler.getInstance().schedule(
             new SequentialCommandGroup(
-                new ParallelRaceGroup(
-                        auto,
-                        new WaitUntilCommand(() -> timer.seconds() >= AutoConstants.MAX_TIME)
-                ),
+                auto,
                 new FollowPathCommand(
                         robot.follower,
                         robot.follower.pathBuilder()

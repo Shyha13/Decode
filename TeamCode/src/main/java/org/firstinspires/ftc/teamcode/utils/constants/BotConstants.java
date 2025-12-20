@@ -5,5 +5,7 @@ import com.acmerobotics.dashboard.config.Config;
 public class BotConstants {
     public static double goalX = 144;
     public static double goalY = 144;
-    public static boolean isMath = true;
+    public enum BotState{
+        MATH, MANUAL, TESTING
+    }
 }

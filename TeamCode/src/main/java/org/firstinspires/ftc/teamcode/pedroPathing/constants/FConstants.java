@@ -16,7 +16,7 @@ public class FConstants {
         FollowerConstants.rightRearMotorName = "backRight";
 
         FollowerConstants.leftFrontMotorDirection = DcMotorSimple.Direction.REVERSE;
-        FollowerConstants.leftRearMotorDirection = DcMotorSimple.Direction.REVERSE;
+        FollowerConstants.leftRearMotorDirection = DcMotorSimple.Direction.FORWARD;
         FollowerConstants.rightFrontMotorDirection = DcMotorSimple.Direction.FORWARD;
         FollowerConstants.rightRearMotorDirection = DcMotorSimple.Direction.FORWARD;
 
@@ -36,7 +36,7 @@ public class FConstants {
         FollowerConstants.useSecondaryHeadingPID = true;
         FollowerConstants.secondaryHeadingPIDFCoefficients.setCoefficients(1.4,0,0.08,0.007); // Not being used, @see useSecondaryHeadingPID
 
-        FollowerConstants.drivePIDFCoefficients.setCoefficients(0.02,0,0.001,0.6,0);
+        FollowerConstants.drivePIDFCoefficients.setCoefficients(0.03,0,0.001,0.6,0);
         FollowerConstants.useSecondaryDrivePID = true;
         FollowerConstants.secondaryDrivePIDFCoefficients.setCoefficients(0.01,0,0.0007,0.6,0); // Not being used, @see useSecondaryDrivePID
 

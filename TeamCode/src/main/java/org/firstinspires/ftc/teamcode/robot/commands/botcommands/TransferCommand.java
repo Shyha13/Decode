@@ -17,52 +17,36 @@ import org.firstinspires.ftc.teamcode.robot.subsystems.Blocker;
 import org.firstinspires.ftc.teamcode.robot.subsystems.Intake;
 import org.firstinspires.ftc.teamcode.robot.subsystems.Kicker;
 import org.firstinspires.ftc.teamcode.robot.subsystems.Shooter;
+import org.firstinspires.ftc.teamcode.utils.MyTelem;
+import org.firstinspires.ftc.teamcode.utils.constants.BotConstants;
+
 @Config
 public class TransferCommand extends SequentialCommandGroup {
     public static int firstBallWaitClose = 600;
     public static int firstBallWaitFar = 1000;
-    public static int kickerWait = 200;
-    public static int intakeWait = 1800;
-    public static int blockerWait = 1000;
-    public TransferCommand(Robot robot, TransferCommandState state){
-        if (state == TransferCommandState.CLOSE) {
-            addCommands(
-                    new ShooterCommand(robot, Shooter.ShooterState.MATH),
-                    new BlockerCommand(robot, Blocker.BlockerState.UNBLOCKED),
-                    new WaitCommand(blockerWait / 2),
-                    new KickerCommand(robot, Kicker.KickerState.ON),
-                    new WaitCommand(kickerWait),
-                    new IntakeCommand(robot, Intake.IntakeState.ON),
-                    new WaitCommand(intakeWait)
-            );
-        }
-        else if(state == TransferCommandState.FAR) {
-            long commandWait = (long) (blockerWait + Math.max(0, ((Robot.getDistanceFromGoal() - 100) * 15)));
+    public static int intakeWait = 1000;
+    public static int blockerWait = 800;
+    public TransferCommand(Robot robot){
+        BotConstants.BotState state = Robot.botState;
+        MyTelem.addData("Robot State", state);
+        Shooter.ShooterState shooterState =
+                state == BotConstants.BotState.MATH ? Shooter.ShooterState.TESTING :
+                        state == BotConstants.BotState.MANUAL ? Shooter.ShooterState.CLOSE :
+                                Shooter.ShooterState.TESTING;
 
-            addCommands(
-                    new ShooterCommand(robot, Shooter.ShooterState.FAR),
-                    new WaitCommand(commandWait / 2),
-                    new BlockerCommand(robot, Blocker.BlockerState.UNBLOCKED),
-                    new WaitCommand(commandWait / 2),
-                    new KickerCommand(robot, Kicker.KickerState.ON),
-                    new WaitCommand(kickerWait),
-                    new IntakeCommand(robot, Intake.IntakeState.SOLOFRONT),
-                    new WaitCommand(intakeWait)
-            );
-        } else if(state == TransferCommandState.MATH){
-            long commandWait = (long) (kickerWait + Math.max(0, ((Robot.getDistanceFromGoal() - 100) * 12)));
+        MyTelem.addData("Shooter State", shooterState);
 
-            addCommands(
-                    new ShooterCommand(robot, Shooter.ShooterState.MATH),
-                    new BlockerCommand(robot, Blocker.BlockerState.UNBLOCKED),
-                    new WaitCommand(blockerWait / 2),
-                    new KickerCommand(robot, Kicker.KickerState.ON),
-                    new WaitCommand(commandWait),
-                    new IntakeCommand(robot, Intake.IntakeState.ON),
-                    new WaitCommand(intakeWait)
-            );
-        }
+        addCommands(
+                new ShooterCommand(robot, shooterState),
+                new WaitCommand(3000),
+                new BlockerCommand(robot, Blocker.BlockerState.UNBLOCKED),
+                new WaitCommand(blockerWait),
+                new KickerCommand(robot, Kicker.KickerState.ON),
+                new IntakeCommand(robot, Intake.IntakeState.ON),
+                new WaitCommand(intakeWait)
+        );
     }
+
 
     public enum TransferCommandState{
         CLOSE, FAR, MATH

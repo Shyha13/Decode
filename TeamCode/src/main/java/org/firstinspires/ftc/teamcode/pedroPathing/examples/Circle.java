@@ -26,8 +26,8 @@ import org.firstinspires.ftc.teamcode.pedroPathing.constants.LConstants;
  * @author Harrison Womack - 10158 Scott's Bots
  * @version 1.0, 3/12/2024
  */
-@Config
 @Autonomous (name = "Circle", group = "Examples")
+@Disabled
 public class Circle extends OpMode {
     private Telemetry telemetryA;
 

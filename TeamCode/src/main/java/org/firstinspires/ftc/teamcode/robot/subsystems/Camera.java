@@ -19,7 +19,6 @@ import org.firstinspires.ftc.vision.apriltag.AprilTagProcessor;
 
 import java.util.List;
 
-@Config
 public class Camera implements Subsystem {
 
     private VisionPortal visionPortal;

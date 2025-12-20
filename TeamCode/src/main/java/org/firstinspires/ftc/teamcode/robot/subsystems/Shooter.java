@@ -15,57 +15,41 @@ import org.firstinspires.ftc.teamcode.robot.Robot;
 import org.firstinspires.ftc.teamcode.utils.MyTelem;
 import org.firstinspires.ftc.teamcode.utils.constants.ShooterConstants;
 
-@Config
 public class Shooter implements Subsystem {
-    DcMotorEx shooterMotor, counterRoller;
-    Servo hood;
-    PIDController shooterRPMPID, counterRollerPID;
+    DcMotorEx shooterMotor, shooterMotor2;
+    PIDController shooterRPMPID;
 
     public ShooterState state = ShooterState.STOP;
-    public Shooter(DcMotorEx shooterMotor, DcMotorEx counterRoller, Servo hood){
+    public Shooter(DcMotorEx shooterMotor, DcMotorEx shooterMotor2){
         shooterRPMPID = new PIDController(ShooterConstants.kp, ShooterConstants.ki, ShooterConstants.kd);
         shooterRPMPID.setTolerance(10);
 
-        counterRollerPID = new PIDController(ShooterConstants.CRkp, ShooterConstants.CRki, ShooterConstants.CRkd);
-        counterRollerPID.setTolerance(10);
+//        counterRollerPID = new PIDController(ShooterConstants.CRkp, ShooterConstants.CRki, ShooterConstants.CRkd);
+//        counterRollerPID.setTolerance(10);
         this.shooterMotor = shooterMotor;
-        this.counterRoller = counterRoller;
-        this.hood = hood;
+        this.shooterMotor2 = shooterMotor2;
     }
 
     public void setState(ShooterState state){
         this.state = state;
-//        switch (state) {
-//            case SHOOTING:
-//                ShooterInput constants = ShooterCalculations.getHoodAndPower();
-//                setPIDPower(constants.getMotorRPM());
-//                setHood(constants.getHoodAngle());
-//            case STOP:
-//                setPIDPower(0);
-//        }
         switch (state) {
             case CLOSE:
                 setShooterPIDPower(ShooterConstants.closeShootRPM);
-                setCounterRollerPIDPower(ShooterConstants.closeShootRPM);
                 break;
             case FAR:
                 setShooterPIDPower(ShooterConstants.farShootRPM);
-                setCounterRollerPIDPower(ShooterConstants.farShootRPM);
                 break;
             case STOP:
                 setShooterPIDPower(0);
-                setCounterRollerPIDPower(0);
                 break;
             case TESTING:
                 setShooterPIDPower(ShooterConstants.tuningTestingRPM);
-                setCounterRollerPIDPower(ShooterConstants.tuningTestingRPM);
                 break;
             case MATH:
                 double rpm = getRPM(Robot.currentPose);
                 rpm = getRPM(Robot.getEffectiveCoordinates());
                 MyTelem.addData("Shooter RPM", rpm);
                 setShooterPIDPower(rpm);
-                setCounterRollerPIDPower(rpm);
                 break;
         }
     }
@@ -114,6 +98,11 @@ public class Shooter implements Subsystem {
         //96.75, 2580
         //134.8, 2965
 
+        //84.803, 4120
+        //108.96, 4350
+        //117.46, 4400
+        //60, 4000
+
         double speed = 1931.52586 * Math.pow(1.00321, distance) + RPM_OFFSET;
 //        double speed = -0.0472686 * distance * distance + 25.9231 * distance + 500;
 //        speed = -0.0472686 * distance * distance + 25.9231 * distance + 500;
@@ -122,43 +111,48 @@ public class Shooter implements Subsystem {
         return speed;
     }
 
-    public void setHood(double pos){
-        hood.setPosition(pos);
-    }
     public double ticksPerSecToRPM(double tps){
         return tps * 60.0 / ShooterConstants.TICKS_PER_REV;
     }
     public void setShooterPIDPower(double targetRPM){
         double topVelocity = Math.abs(shooterMotor.getVelocity());
         double currentRPM = (ticksPerSecToRPM(topVelocity));
+
         shooterRPMPID.setPID(ShooterConstants.kp, ShooterConstants.ki, ShooterConstants.kd);
+
         double power = shooterRPMPID.calculate(currentRPM, targetRPM);
         power += (targetRPM > 0) ? (ShooterConstants.kf * (targetRPM / ShooterConstants.MAX_RPM)) : 0.0;
         power = Range.clip(power, 0, 1);
+
         double currentVoltage = Robot.voltage;
         shooterMotor.setPower(power * 12.0 / currentVoltage);
+        shooterMotor2.setPower(power * 12.0 / currentVoltage);
+
         MyTelem.addData("Shooter Current RPM", currentRPM);
         MyTelem.addData("Shooter Target RPM", targetRPM);
         MyTelem.addData("Shooter Power", power * 12.0 / currentVoltage);
     }
 
-    public double CRTicksPerSecToRPM(double tps){
-        return tps * 60.0 / ShooterConstants.CR_TICKS_PER_REV;
-    }
-
-    public void setCounterRollerPIDPower(double targetRPM){
-        double CRVelocity = Math.abs(counterRoller.getVelocity());
-        double currentRPM = (CRTicksPerSecToRPM(CRVelocity));
-        counterRollerPID.setPID(ShooterConstants.CRkp, ShooterConstants.CRki, ShooterConstants.CRkd);
-        double power = counterRollerPID.calculate(currentRPM, targetRPM);
-        power += (targetRPM > 0) ? (ShooterConstants.CRkf * (targetRPM / ShooterConstants.MAX_RPM)) : 0.0;
-        power = Range.clip(power, 0, 1);
-        double currentVoltage = Robot.voltage;
-        MyTelem.addData("counter roller rpm", targetRPM);
-        MyTelem.addData("counter roller current rpm", currentRPM);
-        counterRoller.setPower(power * 12.0 / currentVoltage);
-    }
-
+//    public void setCounterRollerPIDPower(double targetRPM){
+//        double CRVelocity = Math.abs(counterRoller.getVelocity());
+//        double currentRPM = (CRTicksPerSecToRPM(CRVelocity));
+//
+//        counterRollerPID.setPID(ShooterConstants.CRkp, ShooterConstants.CRki, ShooterConstants.CRkd);
+//
+//        double power = counterRollerPID.calculate(currentRPM, targetRPM);
+//        power += (targetRPM > 0) ? (ShooterConstants.CRkf * (targetRPM / ShooterConstants.MAX_RPM)) : 0.0;
+//        power = Range.clip(power, 0, 1);
+//
+//        double currentVoltage = Robot.voltage;
+//        counterRoller.setPower(power * 12.0 / currentVoltage);
+//
+//        MyTelem.addData("Counter Roller RPM", targetRPM);
+//        MyTelem.addData("Counter Roller Current RPM", currentRPM);
+//    }
+//
+//    public double CRTicksPerSecToRPM(double tps){
+//        return tps * 60.0 / ShooterConstants.CR_TICKS_PER_REV;
+//    }
     public boolean shooterAtRPM(){
         return shooterRPMPID.atSetPoint();
     }
@@ -175,7 +169,7 @@ public class Shooter implements Subsystem {
     public void periodic() {
         setState(state);
         shooterRPMPID.setPID(ShooterConstants.kp, ShooterConstants.ki, ShooterConstants.kd);
-        counterRollerPID.setPID(ShooterConstants.CRkp, ShooterConstants.CRki, ShooterConstants.CRkf);
+//        counterRollerPID.setPID(ShooterConstants.CRkp, ShooterConstants.CRki, ShooterConstants.CRkf);
     }
 
     public enum ShooterState {

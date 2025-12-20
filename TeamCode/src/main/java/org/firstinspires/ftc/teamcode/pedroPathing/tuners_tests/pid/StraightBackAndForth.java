@@ -28,7 +28,6 @@ import org.firstinspires.ftc.teamcode.pedroPathing.constants.LConstants;
  * @author Harrison Womack - 10158 Scott's Bots
  * @version 1.0, 3/12/2024
  */
-@Config
 @Autonomous (name = "Straight Back And Forth", group = "PIDF Tuning")
 public class StraightBackAndForth extends OpMode {
     private Telemetry telemetryA;

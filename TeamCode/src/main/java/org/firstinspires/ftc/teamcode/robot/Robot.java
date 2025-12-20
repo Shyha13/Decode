@@ -9,10 +9,12 @@ import com.pedropathing.follower.Follower;
 import com.pedropathing.localization.Pose;
 import com.pedropathing.pathgen.Point;
 import com.pedropathing.pathgen.Vector;
+import com.qualcomm.hardware.limelightvision.Limelight3A;
 import com.qualcomm.hardware.lynx.LynxModule;
 import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.hardware.VoltageSensor;
@@ -24,6 +26,7 @@ import org.firstinspires.ftc.teamcode.pedroPathing.constants.LConstants;
 import org.firstinspires.ftc.teamcode.robot.subsystems.Blocker;
 import org.firstinspires.ftc.teamcode.robot.subsystems.Intake;
 import org.firstinspires.ftc.teamcode.robot.subsystems.Kicker;
+import org.firstinspires.ftc.teamcode.robot.subsystems.LimelightCamera;
 import org.firstinspires.ftc.teamcode.robot.subsystems.Shooter;
 import org.firstinspires.ftc.teamcode.robot.subsystems.Turret;
 import org.firstinspires.ftc.teamcode.utils.MyTelem;
@@ -35,14 +38,19 @@ import java.util.concurrent.TimeUnit;
 
 @Config
 public class  Robot {
+    public static BotConstants.BotState botState = BotConstants.BotState.MATH;
     public boolean auto = false;
+    public static Vector velocity = new Vector(new Point(0,0));
+    public static Pose currentPose = new Pose(0,0,0);
+    public boolean holding;
+    public static boolean red;
+    public static double voltage = 12;
 
     public Follower follower;
-    public static Vector velocity = new Vector(new Point(0,0));
-
-    // hardware stuff, servos, motors, etc.
+    private ElapsedTime timer;
+    private double previousVoltageTime;
     DcMotorEx backLeftMotor, backRightMotor, frontLeftMotor, frontRightMotor;
-    DcMotorEx topShooterMotor, /*bottomShooterMotor,*/ counterRoller;
+    DcMotorEx topShooterMotor, bottomShooterMotor, counterRoller;
     DcMotorEx intakeMotor, intakeMotor2;
     Servo hoodServo;
     Servo turretLeftServo, turretRightServo, blockerServo;
@@ -56,13 +64,7 @@ public class  Robot {
     public Turret turret;
     public Kicker kicker;
     public Blocker blocker;
-
-    public static Pose currentPose = new Pose(0,0,0);
-    public boolean holding;
-    public static boolean red;
-    public static double voltage = 12;
-    private ElapsedTime timer;
-    private double previousVoltageTime;
+    public LimelightCamera limelightCamera;
     public Robot(HardwareMap hm, boolean isAuto, String color){
         this(hm, isAuto);
         red = color.equals("RED");
@@ -73,12 +75,15 @@ public class  Robot {
         voltageSensor = hm.voltageSensor.iterator().next();
         previousVoltageTime = timer.time(TimeUnit.MILLISECONDS);
         CommandScheduler.getInstance().reset();
+
         auto = isAuto;
-        BotConstants.isMath = true;
         TurretConstants.OFFSET = 0.5;
+
         follower = new Follower(hm, FConstants.class, LConstants.class);
+
         topShooterMotor = hm.get(DcMotorEx.class, "topShooter");
-        counterRoller = hm.get(DcMotorEx.class, "counterRoller");
+        bottomShooterMotor = hm.get(DcMotorEx.class, "counterRoller");
+
         intakeMotor = hm.get(DcMotorEx.class, "intake");
         intakeMotor2 = hm.get(DcMotorEx.class, "intake2");
         turretLeftServo = hm.get(Servo.class, "turretLeftServo");
@@ -86,39 +91,33 @@ public class  Robot {
         blockerServo = hm.get(Servo.class, "BlockerServo");
         kickerRightServo = hm.get(CRServo.class, "kickerRightServo");
         kickerLeftServo = hm.get(CRServo.class, "kickerLeftServo");
+
+        bottomShooterMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         topShooterMotor.setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
-        counterRoller.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+//        counterRoller.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+
+        bottomShooterMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         topShooterMotor.setMode(DcMotorEx.RunMode.RUN_WITHOUT_ENCODER);
-        counterRoller.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+//        counterRoller.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        Limelight3A llHw = hm.get(Limelight3A.class, "limelight");
+
+        bottomShooterMotor.setDirection(DcMotorSimple.Direction.REVERSE);
+
         if(!auto){
             if(currentPose != null)
                 follower.setStartingPose(currentPose);
             else
                 follower.setStartingPose(new Pose(0,0,0));
         }
-        // We can in pedro for this as well.
-        //        backLeft = hm.get(DcMotorEx.class, "backLeft");
-        //        backRight = hm.get(DcMotorEx.class, "backRight");
-        //        frontLeft = hm.get(DcMotorEx.class, "frontRight");
-        //        frontRight = hm.get(DcMotorEx.class, "frontLeft");
 
-
-        //handle auto specific behaviors
-        //ie. resetting motor encoders, etc.
-
-
-        //handle hardware specific settings
-        //ie. zeropowermode, etc.
-
-        //declare all subsystem objects
         intake = new Intake(intakeMotor, intakeMotor2);
-        shooter = new Shooter(topShooterMotor, counterRoller, hoodServo);
+        shooter = new Shooter(topShooterMotor, bottomShooterMotor);
         turret = new Turret(turretLeftServo, turretRightServo);
         kicker = new Kicker(kickerRightServo, kickerLeftServo);
         blocker = new Blocker(blockerServo);
+        limelightCamera = new LimelightCamera(llHw, 0);
 
-        //register subsystems
-        CommandScheduler.getInstance().registerSubsystem(intake, shooter, turret); //kicker
+        CommandScheduler.getInstance().registerSubsystem(intake, shooter, turret, kicker, blocker, limelightCamera);
 
         hubs = hm.getAll(LynxModule.class);
         for (LynxModule hub : hubs) {
@@ -162,7 +161,6 @@ public class  Robot {
 
         MyTelem.addData("Intake Motor Current", intakeMotor2.getCurrent(CurrentUnit.AMPS));
         MyTelem.addData("Shooter Motor Current", topShooterMotor.getCurrent(CurrentUnit.AMPS));
-        MyTelem.addData("Counter Roller Motor Current", counterRoller.getCurrent(CurrentUnit.AMPS));
 
         MyTelem.update();
     }
@@ -217,9 +215,4 @@ public class  Robot {
         double eff_y = current.getY();
         return new Pose(eff_x, eff_y, current.getHeading());
     }
-
-//    public static double getTimeOfFlight(double distance){
-//        distance, time
-//
-//    }
 }
