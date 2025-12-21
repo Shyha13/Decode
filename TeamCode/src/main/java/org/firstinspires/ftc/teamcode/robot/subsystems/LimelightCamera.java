@@ -6,6 +6,7 @@ import com.qualcomm.hardware.limelightvision.LLResult;
 import com.qualcomm.hardware.limelightvision.LLResultTypes;
 import com.qualcomm.hardware.limelightvision.Limelight3A;
 
+import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.Pose3D;
 import org.firstinspires.ftc.robotcore.external.navigation.Position;
 import org.firstinspires.ftc.teamcode.robot.Robot;
@@ -19,7 +20,7 @@ public class LimelightCamera implements Subsystem {
         public double tX = 0.0;
         public double tY = 0.0;
         public double tArea = 0.0;
-        public double distanceM = 0.0;
+        public double distance = 0.0;
     }
 
     private final Limelight3A limelight;
@@ -44,7 +45,7 @@ public class LimelightCamera implements Subsystem {
         if (result == null || !result.isValid()) {
             target.hasTarget = false;
             target.id = -1;
-            target.distanceM = 0.0;
+            target.distance = 0.0;
             return;
         }
 
@@ -58,11 +59,13 @@ public class LimelightCamera implements Subsystem {
         target.botPose = botPose;
 
         if (botPose != null) {
-            double x = botPose.getPosition().x;
-            double y = botPose.getPosition().y;
-            target.distanceM = Math.hypot(x, y);
+            double x = botPose.getPosition().toUnit(DistanceUnit.INCH).x;
+            double y = botPose.getPosition().toUnit(DistanceUnit.INCH).y;
+            x += 72;
+            y += 72;
+            target.distance = Robot.getDistanceFromGoal(new Pose(x, y));
         } else {
-            target.distanceM = 0.0;
+            target.distance = 0.0;
         }
     }
     private void publishTelem() {
@@ -73,8 +76,8 @@ public class LimelightCamera implements Subsystem {
         MyTelem.addData("LL tX", target.tX);
         MyTelem.addData("LL tArea", target.tArea);
         MyTelem.addData("LL tY", target.tY);
-        MyTelem.addData("LL Target Distance", target.distanceM);
-        MyTelem.addData("Bot Pose", target.botPose);
+        MyTelem.addData("LL Target Distance", target.distance);
+        MyTelem.addData("Bot Pose", target.botPose.getPosition().toUnit(DistanceUnit.INCH));
     }
 
 }

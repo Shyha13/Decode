@@ -41,7 +41,7 @@ public class LimelightTester extends LinearOpMode {
             if (t.hasTarget) {
                 MyTelem.addData("LL tX", t.tX);
                 MyTelem.addData("LL tY", t.tY);
-                MyTelem.addData("LL Distance", t.distanceM);
+                MyTelem.addData("LL Distance", t.distance);
             }
 
             MyTelem.update();

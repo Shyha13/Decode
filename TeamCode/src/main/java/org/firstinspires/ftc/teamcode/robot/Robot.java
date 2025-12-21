@@ -64,7 +64,7 @@ public class  Robot {
     public Turret turret;
     public Kicker kicker;
     public Blocker blocker;
-    public LimelightCamera limelightCamera;
+    public static LimelightCamera limelightCamera;
     public Robot(HardwareMap hm, boolean isAuto, String color){
         this(hm, isAuto);
         red = color.equals("RED");
@@ -182,6 +182,9 @@ public class  Robot {
         follower.setMaxPower(1);
         holding = false;
     }
+    public static double getDistanceFromGoalLL(Pose pose){
+        return getTargetTag().distance;
+    }
     public static double getDistanceFromGoal(Pose pose){
         Pose goalPose = Robot.getGoalPose();
 
@@ -200,6 +203,10 @@ public class  Robot {
         else{
             return new Pose(144 - goalX, goalY)
 ;        }
+    }
+
+    public static LimelightCamera.TagTarget getTargetTag(){
+        return limelightCamera.getTargetTag();
     }
 
     public static Pose getEffectiveCoordinates(){

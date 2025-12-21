@@ -8,4 +8,7 @@ public class TurretConstants {
     public static double SLOPE = 0.0032222;
     public static double OFFSET = 0.5;
     public static double turretChange = 0.01;
+    public static double MAX_STEP_PER_LOOP = 0.02;
+    public static double tolerance = 0.002;
+    public static double P = 0.1, I = 0.0, D = 0.000001, F = 0.0;
 }

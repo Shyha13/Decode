@@ -55,7 +55,7 @@ public class Shooter implements Subsystem {
     }
     public double getRPM(Pose pose){
         Vector velocity = Robot.velocity;
-        double distance = Robot.getDistanceFromGoal(pose);
+        double distance = Robot.getDistanceFromGoalLL(pose);
         //Points:
         //
 
