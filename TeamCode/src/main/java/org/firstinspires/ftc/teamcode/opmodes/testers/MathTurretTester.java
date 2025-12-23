@@ -15,11 +15,12 @@ import org.firstinspires.ftc.teamcode.utils.MyTelem;
 public class MathTurretTester extends LinearOpMode {
     public void runOpMode(){
         MyTelem.init(telemetry);
-        Robot robot = new Robot(hardwareMap, false);       waitForStart();
+        Robot robot = new Robot(hardwareMap, false);
+        waitForStart();
 
         GamepadEx gp1 = new GamepadEx(gamepad1);
         gp1.getGamepadButton(GamepadKeys.Button.A).whenPressed(
-                new TurretCommand(robot, Turret.TurretState.MATH)
+                new TurretCommand(robot, Turret.TurretState.MATH_CAMERA)
         );
 
         gp1.getGamepadButton(GamepadKeys.Button.A).whenReleased(

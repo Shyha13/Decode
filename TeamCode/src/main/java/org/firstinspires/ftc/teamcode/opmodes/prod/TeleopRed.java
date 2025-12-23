@@ -40,13 +40,6 @@ public class TeleopRed extends LinearOpMode {
         gp2.getGamepadButton(GamepadKeys.Button.RIGHT_BUMPER).whenPressed(new IntakeCommand(robot, Intake.IntakeState.ON));
         gp2.getGamepadButton(GamepadKeys.Button.RIGHT_BUMPER).whenReleased(new IntakeCommand(robot, Intake.IntakeState.OFF));
 
-        gp2.getGamepadButton(GamepadKeys.Button.DPAD_RIGHT).whenPressed(
-                new InstantCommand(() -> TurretConstants.OFFSET -= TurretConstants.turretChange)
-        );
-        gp2.getGamepadButton(GamepadKeys.Button.DPAD_LEFT).whenPressed(
-                new InstantCommand(() -> TurretConstants.OFFSET += TurretConstants.turretChange)
-        );
-
         gp2.getGamepadButton(GamepadKeys.Button.B).whenPressed(
                 new ParallelCommandGroup(
                         new KickerCommand(robot, Kicker.KickerState.ON),
@@ -59,7 +52,7 @@ public class TeleopRed extends LinearOpMode {
                         new BlockerCommand(robot, Blocker.BlockerState.BLOCKED)
                 ));
 
-        gp2.getGamepadButton(GamepadKeys.Button.DPAD_UP).whenPressed(new TurretCommand(robot, Turret.TurretState.MATH));
+        gp2.getGamepadButton(GamepadKeys.Button.DPAD_UP).whenPressed(new TurretCommand(robot, Turret.TurretState.MATH_CAMERA));
         gp2.getGamepadButton(GamepadKeys.Button.DPAD_UP).whenReleased(new TurretCommand(robot, Turret.TurretState.FRONT));
 
         gp2.getGamepadButton(GamepadKeys.Button.Y).whenPressed(

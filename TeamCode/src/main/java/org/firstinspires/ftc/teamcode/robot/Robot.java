@@ -47,7 +47,7 @@ public class  Robot {
     public static double voltage = 12;
 
     public Follower follower;
-    private ElapsedTime timer;
+    private static ElapsedTime timer;
     private double previousVoltageTime;
     DcMotorEx backLeftMotor, backRightMotor, frontLeftMotor, frontRightMotor;
     DcMotorEx topShooterMotor, bottomShooterMotor, counterRoller;
@@ -183,7 +183,11 @@ public class  Robot {
         holding = false;
     }
     public static double getDistanceFromGoalLL(Pose pose){
-        return getTargetTag().distance;
+        if (getTargetTag().hasTarget && getTargetTag().distance > 0) {
+            return getTargetTag().distance;
+        } else{
+            return getDistanceFromGoal(pose);
+        }
     }
     public static double getDistanceFromGoal(Pose pose){
         Pose goalPose = Robot.getGoalPose();
@@ -218,5 +222,9 @@ public class  Robot {
         double eff_x = current.getX();
         double eff_y = current.getY();
         return new Pose(eff_x, eff_y, current.getHeading());
+    }
+
+    public static long getTime(){
+        return timer.time(TimeUnit.MILLISECONDS);
     }
 }

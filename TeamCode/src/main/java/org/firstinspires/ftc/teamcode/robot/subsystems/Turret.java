@@ -1,7 +1,5 @@
 package org.firstinspires.ftc.teamcode.robot.subsystems;
 
-import static com.sun.tools.javac.api.DiagnosticFormatter.PositionKind.OFFSET;
-
 import static org.firstinspires.ftc.teamcode.utils.constants.TurretConstants.D;
 import static org.firstinspires.ftc.teamcode.utils.constants.TurretConstants.F;
 import static org.firstinspires.ftc.teamcode.utils.constants.TurretConstants.I;
@@ -25,7 +23,6 @@ public class Turret implements Subsystem {
 
     public Servo turretLeftServo, turretRightServo;
     public TurretState state;
-    PIDController align;
     private double turretCommandPos = TurretConstants.turretForwardPosition;
 
     // === Exact mapping from calibration ===
@@ -36,25 +33,26 @@ public class Turret implements Subsystem {
     public Turret(Servo turretLeftServo, Servo turretRightServo) {
         this.turretLeftServo = turretLeftServo;
         this.turretRightServo = turretRightServo;
-        align = new PIDController(P, I, D);
-        align.setTolerance(0.1);
-
         state = TurretState.FRONT;
     }
 
     public void setState(TurretState state) {
         this.state = state;
-
         switch (state) {
             case FRONT:
                 setServoPos(TurretConstants.turretForwardPosition);
                 break;
-
             case MATH:
-                if (!Robot.getTargetTag().hasTarget)
+                pointToGoalPinPoint(Robot.getEffectiveCoordinates());
+                break;
+            case MATH_CAMERA:
+                LimelightCamera.TagTarget tag = Robot.getTargetTag();
+                if (tag == null || !tag.hasTarget) {
                     pointToGoalPinPoint(Robot.getEffectiveCoordinates());
-                else
-                    pointToGoalCamera(Robot.getEffectiveCoordinates());
+                } else{
+                    MyTelem.addData("MATH CAMERA", true);
+                    pointToGoalCamera(tag);
+                }
                 break;
         }
     }
@@ -65,26 +63,23 @@ public class Turret implements Subsystem {
         turretRightServo.setPosition(pos);
     }
 
-    private void pointToGoalCamera(Pose cur) {
-        LimelightCamera.TagTarget tag = Robot.getTargetTag();
+    private void pointToGoalCamera(LimelightCamera.TagTarget tag) {
+        if (tag == null || !tag.hasTarget) return;
         double tX = tag.tX;
-        double power = F + align.calculate(tX, 0);
-
-        if (tag == null || !tag.hasTarget) {
+        if (Math.abs(tX) < 0.5){
             return;
         }
+        double deltaPos = tX * SLOPE * P;
+        double targetAngleDeg = turretCommandPos - deltaPos;
 
-        double pidOut = align.calculate(tX, 0);
-        double correctionDeg = F + pidOut;
-        double deltaPos = correctionDeg * TurretConstants.SLOPE;
-        double newPos = turretCommandPos + deltaPos;
-        if (Math.abs(deltaPos) > tolerance) {
-            setServoPos(newPos);
-        }
-        MyTelem.addData("tX", tX);
-        MyTelem.addData("pidOut", pidOut);
-        MyTelem.addData("deltaPos", deltaPos);
-        MyTelem.addData("turretPosCmd", turretCommandPos);
+        double step = Range.clip(targetAngleDeg - turretCommandPos, -MAX_STEP_PER_LOOP, MAX_STEP_PER_LOOP);
+        setServoPos(turretCommandPos + step);
+
+
+        MyTelem.addData("Math Camera", true);
+        MyTelem.addData("Desired Pos", targetAngleDeg);
+        MyTelem.addData("Turret Pos Command", turretCommandPos);
+        MyTelem.addData("Step", step);
     }
     private void pointToGoalPinPoint(Pose cur) {
         Pose goal = Robot.getGoalPose();
@@ -110,10 +105,9 @@ public class Turret implements Subsystem {
     @Override
     public void periodic(){
         setState(state);
-        align.setPID(P, I, D);
     }
 
     public enum TurretState {
-        FRONT, MATH, BACK
+        FRONT, MATH, MATH_CAMERA
     }
 }

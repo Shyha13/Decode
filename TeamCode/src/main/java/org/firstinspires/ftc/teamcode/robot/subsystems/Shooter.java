@@ -1,6 +1,9 @@
 package org.firstinspires.ftc.teamcode.robot.subsystems;
 
 import static org.firstinspires.ftc.teamcode.utils.constants.ShooterConstants.RPM_OFFSET;
+import static org.firstinspires.ftc.teamcode.utils.constants.ShooterConstants.startingVelocity;
+import static org.firstinspires.ftc.teamcode.utils.constants.ShooterConstants.tuningTestingRPM;
+import static org.firstinspires.ftc.teamcode.utils.constants.ShooterConstants.currentVelocity;
 
 import com.acmerobotics.dashboard.config.Config;
 import com.arcrobotics.ftclib.command.Subsystem;
@@ -34,22 +37,22 @@ public class Shooter implements Subsystem {
         this.state = state;
         switch (state) {
             case CLOSE:
-                setShooterPIDPower(ShooterConstants.closeShootRPM);
+                currentVelocity = ShooterConstants.closeShootRPM;
                 break;
             case FAR:
-                setShooterPIDPower(ShooterConstants.farShootRPM);
+                currentVelocity = ShooterConstants.farShootRPM;
                 break;
             case STOP:
-                setShooterPIDPower(0);
+                currentVelocity = startingVelocity;
                 break;
             case TESTING:
-                setShooterPIDPower(ShooterConstants.tuningTestingRPM);
+                currentVelocity = tuningTestingRPM;
                 break;
             case MATH:
                 double rpm = getRPM(Robot.currentPose);
                 rpm = getRPM(Robot.getEffectiveCoordinates());
                 MyTelem.addData("Shooter RPM", rpm);
-                setShooterPIDPower(rpm);
+                currentVelocity = rpm;
                 break;
         }
     }
@@ -103,9 +106,11 @@ public class Shooter implements Subsystem {
         //117.46, 4400
         //60, 4000
 
-        double speed = 1931.52586 * Math.pow(1.00321, distance) + RPM_OFFSET;
+        //y=0.0270551x^{2}+2.69484x+3513.8641
+//        double speed = 1931.52586 * Math.pow(1.00321, distance) + RPM_OFFSET;
 //        double speed = -0.0472686 * distance * distance + 25.9231 * distance + 500;
 //        speed = -0.0472686 * distance * distance + 25.9231 * distance + 500;
+        double speed = 0.0270551 * distance * distance + 2.69484 * distance + 3513.8641;
         MyTelem.addData("speed", speed);
 
         return speed;
@@ -132,27 +137,6 @@ public class Shooter implements Subsystem {
         MyTelem.addData("Shooter Target RPM", targetRPM);
         MyTelem.addData("Shooter Power", power * 12.0 / currentVoltage);
     }
-
-//    public void setCounterRollerPIDPower(double targetRPM){
-//        double CRVelocity = Math.abs(counterRoller.getVelocity());
-//        double currentRPM = (CRTicksPerSecToRPM(CRVelocity));
-//
-//        counterRollerPID.setPID(ShooterConstants.CRkp, ShooterConstants.CRki, ShooterConstants.CRkd);
-//
-//        double power = counterRollerPID.calculate(currentRPM, targetRPM);
-//        power += (targetRPM > 0) ? (ShooterConstants.CRkf * (targetRPM / ShooterConstants.MAX_RPM)) : 0.0;
-//        power = Range.clip(power, 0, 1);
-//
-//        double currentVoltage = Robot.voltage;
-//        counterRoller.setPower(power * 12.0 / currentVoltage);
-//
-//        MyTelem.addData("Counter Roller RPM", targetRPM);
-//        MyTelem.addData("Counter Roller Current RPM", currentRPM);
-//    }
-//
-//    public double CRTicksPerSecToRPM(double tps){
-//        return tps * 60.0 / ShooterConstants.CR_TICKS_PER_REV;
-//    }
     public boolean shooterAtRPM(){
         return shooterRPMPID.atSetPoint();
     }
@@ -169,7 +153,7 @@ public class Shooter implements Subsystem {
     public void periodic() {
         setState(state);
         shooterRPMPID.setPID(ShooterConstants.kp, ShooterConstants.ki, ShooterConstants.kd);
-//        counterRollerPID.setPID(ShooterConstants.CRkp, ShooterConstants.CRki, ShooterConstants.CRkf);
+        setShooterPIDPower(currentVelocity);
     }
 
     public enum ShooterState {

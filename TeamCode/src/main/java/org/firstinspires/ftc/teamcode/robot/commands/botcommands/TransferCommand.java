@@ -22,23 +22,21 @@ import org.firstinspires.ftc.teamcode.utils.constants.BotConstants;
 
 @Config
 public class TransferCommand extends SequentialCommandGroup {
-    public static int firstBallWaitClose = 600;
-    public static int firstBallWaitFar = 1000;
+    public static int speedUpDelay = 3000;
     public static int intakeWait = 1000;
     public static int blockerWait = 800;
     public TransferCommand(Robot robot){
         BotConstants.BotState state = Robot.botState;
         MyTelem.addData("Robot State", state);
         Shooter.ShooterState shooterState =
-                state == BotConstants.BotState.MATH ? Shooter.ShooterState.TESTING :
+                state == BotConstants.BotState.MATH ? Shooter.ShooterState.MATH :
                         state == BotConstants.BotState.MANUAL ? Shooter.ShooterState.CLOSE :
                                 Shooter.ShooterState.TESTING;
-
         MyTelem.addData("Shooter State", shooterState);
 
         addCommands(
                 new ShooterCommand(robot, shooterState),
-                new WaitCommand(3000),
+                new WaitCommand(speedUpDelay),
                 new BlockerCommand(robot, Blocker.BlockerState.UNBLOCKED),
                 new WaitCommand(blockerWait),
                 new KickerCommand(robot, Kicker.KickerState.ON),
