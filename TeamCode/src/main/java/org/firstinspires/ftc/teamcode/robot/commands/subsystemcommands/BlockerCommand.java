@@ -12,8 +12,7 @@ import org.firstinspires.ftc.teamcode.robot.subsystems.Shooter;
 public class BlockerCommand extends SequentialCommandGroup {
     public BlockerCommand(Robot robot, Blocker.BlockerState state){
         addCommands(
-                new InstantCommand(() -> robot.blocker.setState(state)),
-                new WaitCommand(100)
+                new InstantCommand(() -> robot.blocker.setState(state))
         );
     }
 }

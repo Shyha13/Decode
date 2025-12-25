@@ -22,9 +22,9 @@ import org.firstinspires.ftc.teamcode.utils.constants.BotConstants;
 
 @Config
 public class TransferCommand extends SequentialCommandGroup {
-    public static int speedUpDelay = 3000;
-    public static int intakeWait = 1000;
-    public static int blockerWait = 800;
+    public static int speedUpDelay = 0; 
+    public static int intakeWait = 0;
+    public static int blockerWait = 0;
     public TransferCommand(Robot robot){
         BotConstants.BotState state = Robot.botState;
         MyTelem.addData("Robot State", state);

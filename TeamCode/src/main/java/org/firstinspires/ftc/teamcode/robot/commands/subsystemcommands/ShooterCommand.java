@@ -11,8 +11,7 @@ import org.firstinspires.ftc.teamcode.robot.subsystems.Shooter;
 public class ShooterCommand extends SequentialCommandGroup {
     public ShooterCommand(Robot robot, Shooter.ShooterState state){
         addCommands(
-                new InstantCommand(() -> robot.shooter.setState(state)),
-                new WaitCommand(200)
+                new InstantCommand(() -> robot.shooter.setState(state))
         );
     }
 }
