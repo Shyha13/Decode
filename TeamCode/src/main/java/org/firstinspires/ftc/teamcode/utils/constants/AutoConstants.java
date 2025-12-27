@@ -5,21 +5,21 @@ import com.pedropathing.localization.Pose;
 
 @Config
 public class AutoConstants {
+    public static double finalShootHeading = 220;
     public static double startHeading = 156;
-    public static double MAX_TIME = 32;
     public static double shootingAngle = 180;
-    public static int firstWait = 300;
-    public static int secondWait = 700;
-    public static int thirdWait = 1800;
-    public static double shootingX = 60;
-    public static double shootingY = 84;
+    public static double leverHeading = 161;
+    public static double shootingX = 64;
+    public static double shootingY = 80;
     public static double firstIntakeX = 15;
-    public static double secondIntakeX = 10.000;
-    public static Pose finalPose = new Pose(0,0,0);
+    public static double secondIntakeX = 14;
     public static int intakeBallWait = 200;
-    public static double leverPoseX = 33.34;
-    public static double leverPoseY = 73;
+    public static int leverIntakeBallWait = 1500;
+    public static double leverPoseX = 35; //control point
+    public static double leverPoseY = 59; //control point
     public static double startX = 21.32;
     public static double startY = 123.84;
-    public static double leverX = 18.0;
+    public static double leverX = 17.41;
+    public static double leverY = 50.5;
+
 }
