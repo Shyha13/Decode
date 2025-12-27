@@ -138,7 +138,7 @@ public class Shooter implements Subsystem {
         MyTelem.addData("Shooter Power", power * 12.0 / currentVoltage);
     }
     public boolean shooterAtRPM(){
-        return shooterRPMPID.atSetPoint();
+        return Math.abs(shooterRPMPID.getPositionError()) <= 200;
     }
 
     public boolean atRPM() {
