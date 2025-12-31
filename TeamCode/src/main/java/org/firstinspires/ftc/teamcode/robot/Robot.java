@@ -112,7 +112,7 @@ public class  Robot {
         turret = new Turret(turretLeftServo, turretRightServo);
         kicker = new Kicker(kickerRightServo, kickerLeftServo);
         blocker = new Blocker(blockerServo);
-        limelightCamera = new LimelightCamera(llHw, 0);
+        limelightCamera = new LimelightCamera(llHw, red ? 0 : 1);
 
         CommandScheduler.getInstance().registerSubsystem(intake, shooter, turret, kicker, blocker, limelightCamera);
 
