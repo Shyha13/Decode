@@ -53,8 +53,14 @@ public class LimelightCamera implements Subsystem {
 
             lastSeenTimeMs = now;
             double totalPitchDeg = target.tY + cameraYaw;
-
-            target.distance = BotConstants.goalDY / Math.tan(Math.toRadians(totalPitchDeg));
+            if (totalPitchDeg == 90 || totalPitchDeg == 270) {
+                return;
+            }
+            double tan = Math.tan(Math.toRadians(totalPitchDeg));
+            if (tan == 0) {
+                return;
+            }
+            target.distance = BotConstants.goalDY / tan;
             return;
         }
 

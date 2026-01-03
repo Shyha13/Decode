@@ -55,7 +55,6 @@ public class Turret implements Subsystem {
                         pointToGoalPinPoint(Robot.getEffectiveCoordinates());
                         return;
                     }
-                    MyTelem.addData("MATH CAMERA", true);
                     pointToGoalCamera(tag);
                 }
                 break;
@@ -82,9 +81,6 @@ public class Turret implements Subsystem {
 
 
         MyTelem.addData("Math Camera", true);
-        MyTelem.addData("Desired Pos", targetAngleDeg);
-        MyTelem.addData("Turret Pos Command", turretCommandPos);
-        MyTelem.addData("Step", step);
     }
     private void pointToGoalPinPoint(Pose cur) {
         Pose goal = Robot.getGoalPose();

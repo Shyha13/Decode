@@ -12,16 +12,19 @@ public class FollowPathCommand extends CommandBase {
     private final PathChain path;
     private boolean holdEnd = true;
     private boolean mirrored = false;
+    private double maxPower = 1;
     public FollowPathCommand(Follower follower, PathChain path) {
         this.follower = follower;
+        follower.setMaxPower(maxPower);
         this.path = path;
     }
 
-//    public FollowPathCommand(Follower follower, PathChain path){
-//        this.follower = follower;
-//        this.path = follower.pathBuilder()
-//                .addPath()
-//    }
+    public FollowPathCommand(Follower follower, PathChain path, int maxPower){
+        this.follower = follower;
+        follower.setMaxPower(maxPower);
+        this.maxPower = maxPower;
+        this.path = path;
+    ;}
     public FollowPathCommand(Follower follower, Path path) {
         this(follower, new PathChain(path));
     }

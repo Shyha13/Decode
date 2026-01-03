@@ -14,10 +14,12 @@ import org.firstinspires.ftc.teamcode.robot.commands.botcommands.TransferCommand
 import org.firstinspires.ftc.teamcode.robot.commands.subsystemcommands.BlockerCommand;
 import org.firstinspires.ftc.teamcode.robot.commands.subsystemcommands.IntakeCommand;
 import org.firstinspires.ftc.teamcode.robot.commands.subsystemcommands.KickerCommand;
+import org.firstinspires.ftc.teamcode.robot.commands.subsystemcommands.ShooterCommand;
 import org.firstinspires.ftc.teamcode.robot.commands.subsystemcommands.TurretCommand;
 import org.firstinspires.ftc.teamcode.robot.subsystems.Blocker;
 import org.firstinspires.ftc.teamcode.robot.subsystems.Intake;
 import org.firstinspires.ftc.teamcode.robot.subsystems.Kicker;
+import org.firstinspires.ftc.teamcode.robot.subsystems.Shooter;
 import org.firstinspires.ftc.teamcode.robot.subsystems.Turret;
 import org.firstinspires.ftc.teamcode.utils.MyTelem;
 import org.firstinspires.ftc.teamcode.utils.constants.BotConstants;
@@ -48,8 +50,18 @@ public class TeleopRed extends LinearOpMode {
                         new BlockerCommand(robot, Blocker.BlockerState.BLOCKED)
                 ));
 
-        gp2.getGamepadButton(GamepadKeys.Button.DPAD_UP).whenPressed(new TurretCommand(robot, Turret.TurretState.MATH_CAMERA));
-        gp2.getGamepadButton(GamepadKeys.Button.DPAD_UP).whenReleased(new TurretCommand(robot, Turret.TurretState.FRONT));
+        gp2.getGamepadButton(GamepadKeys.Button.DPAD_UP).whenPressed(
+                new ParallelCommandGroup(
+                    new TurretCommand(robot, Turret.TurretState.MATH_CAMERA),
+                    new ShooterCommand(robot, Shooter.ShooterState.SPEEDING_UP)
+                )
+        );
+        gp2.getGamepadButton(GamepadKeys.Button.DPAD_UP).whenReleased(
+                new ParallelCommandGroup(
+                    new TurretCommand(robot, Turret.TurretState.FRONT),
+                    new ShooterCommand(robot, Shooter.ShooterState.STOP)
+                )
+        );
 
         gp2.getGamepadButton(GamepadKeys.Button.Y).whenPressed(
                 new TransferCommand(robot)

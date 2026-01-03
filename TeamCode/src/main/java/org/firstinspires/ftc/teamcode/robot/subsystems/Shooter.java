@@ -48,10 +48,12 @@ public class Shooter implements Subsystem {
             case TESTING:
                 currentVelocity = tuningTestingRPM;
                 break;
+            case SPEEDING_UP:
+                currentVelocity = ShooterConstants.speedingVelocity;
+                break;
             case MATH:
                 double rpm = getRPM(Robot.currentPose);
-                rpm = getRPM(Robot.getEffectiveCoordinates());
-                MyTelem.addData("Shooter RPM", rpm);
+                rpm = getRPM(Robot.getEffectiveCoordinates()) + RPM_OFFSET;
                 currentVelocity = rpm;
                 break;
         }
@@ -130,12 +132,12 @@ public class Shooter implements Subsystem {
         power = Range.clip(power, 0, 1);
 
         double currentVoltage = Robot.voltage;
-        shooterMotor.setPower(power * 12.0 / currentVoltage);
-        shooterMotor2.setPower(power * 12.0 / currentVoltage);
+        shooterMotor.setPower(power * 13 / currentVoltage);
+        shooterMotor2.setPower(power * 13 / currentVoltage);
 
         MyTelem.addData("Shooter Current RPM", currentRPM);
         MyTelem.addData("Shooter Target RPM", targetRPM);
-        MyTelem.addData("Shooter Power", power * 12.0 / currentVoltage);
+        MyTelem.addData("Shooter Power", power * 13 / currentVoltage);
     }
     public boolean shooterAtRPM(){
         return Math.abs(shooterRPMPID.getPositionError()) <= 200;
@@ -157,6 +159,6 @@ public class Shooter implements Subsystem {
     }
 
     public enum ShooterState {
-        CLOSE, FAR, STOP, TESTING, MATH
+        CLOSE, FAR, STOP, TESTING, MATH, SPEEDING_UP
     }
 }

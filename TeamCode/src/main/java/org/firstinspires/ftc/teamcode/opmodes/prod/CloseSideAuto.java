@@ -59,7 +59,7 @@ public class CloseSideAuto extends OpMode {
         CommandScheduler.getInstance().schedule(
                 new SequentialCommandGroup(
                     new BlockerCommand(robot, Blocker.BlockerState.BLOCKED),
-                    new TurretCommand(robot, Turret.TurretState.MATH)
+                    new TurretCommand(robot, Turret.TurretState.FRONT)
                 )
         );
 
@@ -82,6 +82,7 @@ public class CloseSideAuto extends OpMode {
                     new TurretCommand(robot, Turret.TurretState.FRONT),
                     new FollowPathCommand(robot.follower, paths.Path2)
                 ),
+                new WaitCommand(200),
                 new ParallelCommandGroup(
                         new FollowPathCommand(robot.follower, paths.Path3),
                         new TurretCommand(robot, Turret.TurretState.MATH_CAMERA),
@@ -124,9 +125,14 @@ public class CloseSideAuto extends OpMode {
                     new FollowPathCommand(robot.follower, paths.Path4)
                 ),
                 new ParallelCommandGroup(
+                    new FollowPathCommand(robot.follower, paths.Path5),
+                    new SequentialCommandGroup(
+                            new IntakeCommand(robot, Intake.IntakeState.OFF),
+                            new WaitCommand(300),
+                            new IntakeCommand(robot, Intake.IntakeState.ON)
+                    ),
                     new TurretCommand(robot, Turret.TurretState.MATH_CAMERA),
-                    new ShooterCommand(robot, shooterState),
-                    new FollowPathCommand(robot.follower, paths.Path5)
+                    new ShooterCommand(robot, shooterState)
                 ),
                 shootThree(),
                 new IntakeCommand(robot, Intake.IntakeState.ON),
@@ -135,9 +141,14 @@ public class CloseSideAuto extends OpMode {
                     new FollowPathCommand(robot.follower, paths.Path6)
                 ),
                 new ParallelCommandGroup(
+                    new FollowPathCommand(robot.follower, paths.Path7),
+                    new SequentialCommandGroup(
+                        new IntakeCommand(robot, Intake.IntakeState.OFF),
+                        new WaitCommand(300),
+                        new IntakeCommand(robot, Intake.IntakeState.ON)
+                    ),
                     new TurretCommand(robot, Turret.TurretState.MATH_CAMERA),
-                    new ShooterCommand(robot, shooterState),
-                    new FollowPathCommand(robot.follower, paths.Path7)
+                    new ShooterCommand(robot, shooterState)
                 ),
                 shootThree()
         );
@@ -173,7 +184,7 @@ public class CloseSideAuto extends OpMode {
                         new ShooterCommand(robot, shooterState),
                         new FollowPathCommand(robot.follower, paths.LeverPath2),
                         new SequentialCommandGroup(
-                                new WaitCommand(300),
+                                new WaitCommand( 300),
                                 new IntakeCommand(robot, Intake.IntakeState.ON)
                         )
                 ),
@@ -241,12 +252,11 @@ public class CloseSideAuto extends OpMode {
 //                    .(Math.toRadians(startHeading), Math.toRadians(heading180))
                     .setTangentHeadingInterpolation()
                     .setReversed(true)
-                    .setZeroPowerAccelerationMultiplier(4)
                     .build();
             Path2 = follower.pathBuilder()
                     .addPath(new BezierCurve(shootingPose, mid2Curve, secondIntake))
                     .setLinearHeadingInterpolation(Math.toRadians(heading180), Math.toRadians(heading180))
-                    .setZeroPowerAccelerationMultiplier(4)
+                    .setZeroPowerAccelerationMultiplier(6)
                     .build();
             Path3 = follower.pathBuilder()
                     .addPath(new BezierLine(secondIntake, shootingPose))
@@ -263,7 +273,6 @@ public class CloseSideAuto extends OpMode {
 //                    .setLinearHeadingInterpolation(Math.toRadians(leverHeading), Math.toRadians(heading180))
                     .setTangentHeadingInterpolation()
                     .setReversed(true)
-                    .setZeroPowerAccelerationMultiplier(4)
                     .build();
             LeverPath3 = follower.pathBuilder()
                     .addPath(new BezierCurve(shootingPose, leverControl, leverPose))
@@ -275,13 +284,11 @@ public class CloseSideAuto extends OpMode {
 //                    .setLinearHeadingInterpolation(Math.toRadians(leverHeading), Math.toRadians(heading180))
                     .setTangentHeadingInterpolation()
                     .setReversed(true)
-                    .setZeroPowerAccelerationMultiplier(4)
                     .build();
 
             Path4 = follower.pathBuilder()
                     .addPath(new BezierCurve(shootingPose, mid1Curve, firstIntake))
                     .setLinearHeadingInterpolation(Math.toRadians(heading180), Math.toRadians(heading180))
-                    .setZeroPowerAccelerationMultiplier(4)
                     .build();
             Path5 = follower.pathBuilder()
                     .addPath(new BezierLine(firstIntake, shootingPose))
@@ -291,7 +298,6 @@ public class CloseSideAuto extends OpMode {
             Path6 = follower.pathBuilder()
                     .addPath(new BezierCurve(shootingPose, mid3Curve, finalIntake))
                     .setLinearHeadingInterpolation(Math.toRadians(finalShootHeading), Math.toRadians(heading180))
-                    .setZeroPowerAccelerationMultiplier(4)
                     .build();
             Path7 = follower.pathBuilder()
                     .addPath(new BezierLine(finalIntake, finalShootingPose))
