@@ -40,13 +40,6 @@ public class TeleopBlue extends LinearOpMode {
         gp2.getGamepadButton(GamepadKeys.Button.RIGHT_BUMPER).whenPressed(new IntakeCommand(robot, Intake.IntakeState.ON));
         gp2.getGamepadButton(GamepadKeys.Button.RIGHT_BUMPER).whenReleased(new IntakeCommand(robot, Intake.IntakeState.OFF));
 
-        gp2.getGamepadButton(GamepadKeys.Button.DPAD_RIGHT).whenPressed(
-                new InstantCommand(() -> TurretConstants.OFFSET -= TurretConstants.turretChange)
-        );
-        gp2.getGamepadButton(GamepadKeys.Button.DPAD_LEFT).whenPressed(
-                new InstantCommand(() -> TurretConstants.OFFSET += TurretConstants.turretChange)
-        );
-
         gp2.getGamepadButton(GamepadKeys.Button.B).whenPressed(
                 new ParallelCommandGroup(
                         new KickerCommand(robot, Kicker.KickerState.ON),
@@ -59,12 +52,22 @@ public class TeleopBlue extends LinearOpMode {
                         new BlockerCommand(robot, Blocker.BlockerState.BLOCKED)
                 ));
 
-        gp2.getGamepadButton(GamepadKeys.Button.DPAD_UP).whenPressed(new TurretCommand(robot, Turret.TurretState.MATH));
-        gp2.getGamepadButton(GamepadKeys.Button.DPAD_UP).whenReleased(new TurretCommand(robot, Turret.TurretState.FRONT));
+        gp2.getGamepadButton(GamepadKeys.Button.DPAD_UP).whenPressed(
+                new ParallelCommandGroup(
+                        new TurretCommand(robot, Turret.TurretState.MATH_CAMERA),
+                        new ShooterCommand(robot, Shooter.ShooterState.SPEEDING_UP)
+                )
+        );
+        gp2.getGamepadButton(GamepadKeys.Button.DPAD_UP).whenReleased(
+                new ParallelCommandGroup(
+                        new TurretCommand(robot, Turret.TurretState.FRONT),
+                        new ShooterCommand(robot, Shooter.ShooterState.STOP)
+                )
+        );
+
         gp2.getGamepadButton(GamepadKeys.Button.Y).whenPressed(
                 new TransferCommand(robot)
         );
-
         gp2.getGamepadButton(GamepadKeys.Button.Y).whenReleased(
                 new TransferCancelCommand(robot)
         );
@@ -115,7 +118,7 @@ public class TeleopBlue extends LinearOpMode {
         }
 
         while (opModeIsActive()) {
-            robot.follower.setTeleOpMovementVectors(-gamepad1.left_stick_y, -gamepad1.left_stick_x, -gamepad1.right_stick_x, true);
+            robot.follower.setTeleOpMovementVectors(-gamepad1.left_stick_y, -gamepad1.left_stick_x, -gamepad1.right_stick_x * BotConstants.turnSpeed, true);
             robot.update();
         }
 
