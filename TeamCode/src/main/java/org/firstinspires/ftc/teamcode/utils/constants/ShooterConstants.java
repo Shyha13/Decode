@@ -10,7 +10,7 @@ public class ShooterConstants {
     public static double closeShootRPM = 4100;// 1800
     public static double farShootRPM = 4100; //2.16k
     public static double tuningTestingRPM = 4100;
-    public static double kf = 0.5, kp = 0.4, ki = 0, kd = 0.0000001;
+    public static double kf = 0.5, kp = 0.7, ki = 0, kd = 0.00000001;
 //    public static double CRkf = 0.3, CRkp = 0.004, CRki = 0, CRkd = 0.00001;
 //    public static int CR_TICKS_PER_REV = 28;
     public static int RPM_OFFSET = 50;

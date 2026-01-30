@@ -17,7 +17,6 @@ import org.firstinspires.ftc.teamcode.robot.subsystems.Shooter;
 public class TransferCancelCommand extends SequentialCommandGroup {
     public TransferCancelCommand(Robot robot){
         addCommands(
-             new KickerCommand(robot, Kicker.KickerState.OFF),
              new IntakeCommand(robot, Intake.IntakeState.OFF),
              new ShooterCommand(robot, Shooter.ShooterState.STOP),
              new BlockerCommand(robot, Blocker.BlockerState.BLOCKED)

@@ -35,7 +35,6 @@ public class TransferCommand extends SequentialCommandGroup {
                 new BlockerCommand(robot, Blocker.BlockerState.UNBLOCKED),
                 new WaitCommand(200),
                 new IntakeCommand(robot, Intake.IntakeState.ON),
-                new KickerCommand(robot, Kicker.KickerState.ON),
                 new WaitCommand(750)
         );
     }

@@ -43,13 +43,11 @@ public class TeleopBlue extends LinearOpMode {
 
         gp2.getGamepadButton(GamepadKeys.Button.B).whenPressed(
                 new ParallelCommandGroup(
-                        new KickerCommand(robot, Kicker.KickerState.ON),
                         new BlockerCommand(robot, Blocker.BlockerState.UNBLOCKED)
                 )
         );
         gp2.getGamepadButton(GamepadKeys.Button.B).whenReleased(
                 new ParallelCommandGroup(
-                        new KickerCommand(robot, Kicker.KickerState.OFF),
                         new BlockerCommand(robot, Blocker.BlockerState.BLOCKED)
                 ));
 
@@ -80,7 +78,6 @@ public class TeleopBlue extends LinearOpMode {
 
         gp2.getGamepadButton(GamepadKeys.Button.A).whenPressed(
                 new ParallelCommandGroup(
-                        new KickerCommand(robot, Kicker.KickerState.ON),
                         new BlockerCommand(robot, Blocker.BlockerState.UNBLOCKED),
                         new IntakeCommand(robot, Intake.IntakeState.ON)
                 )
@@ -88,7 +85,6 @@ public class TeleopBlue extends LinearOpMode {
 
         gp2.getGamepadButton(GamepadKeys.Button.A).whenReleased(
                 new ParallelCommandGroup(
-                        new KickerCommand(robot, Kicker.KickerState.OFF),
                         new BlockerCommand(robot, Blocker.BlockerState.BLOCKED),
                         new IntakeCommand(robot, Intake.IntakeState.OFF)
                 )

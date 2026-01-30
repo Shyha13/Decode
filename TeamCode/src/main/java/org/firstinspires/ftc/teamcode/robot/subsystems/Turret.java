@@ -28,8 +28,8 @@ public class Turret implements Subsystem {
 
     // === Exact mapping from calibration ===
     // Forward = 0.5  at   0°
-    // 180°    = 0.42
-    // slope = 0.0032222 (servoPos/degree)
+    // 180°    = 0.06 0.44
+    // slope = 0.002444444 (servoPos/degree)
 
     public Turret(Servo turretLeftServo, Servo turretRightServo) {
         this.turretLeftServo = turretLeftServo;

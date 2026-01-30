@@ -13,12 +13,10 @@ import org.firstinspires.ftc.teamcode.robot.commands.botcommands.TransferCancelC
 import org.firstinspires.ftc.teamcode.robot.commands.botcommands.TransferCommand;
 import org.firstinspires.ftc.teamcode.robot.commands.subsystemcommands.BlockerCommand;
 import org.firstinspires.ftc.teamcode.robot.commands.subsystemcommands.IntakeCommand;
-import org.firstinspires.ftc.teamcode.robot.commands.subsystemcommands.KickerCommand;
 import org.firstinspires.ftc.teamcode.robot.commands.subsystemcommands.ShooterCommand;
 import org.firstinspires.ftc.teamcode.robot.commands.subsystemcommands.TurretCommand;
 import org.firstinspires.ftc.teamcode.robot.subsystems.Blocker;
 import org.firstinspires.ftc.teamcode.robot.subsystems.Intake;
-import org.firstinspires.ftc.teamcode.robot.subsystems.Kicker;
 import org.firstinspires.ftc.teamcode.robot.subsystems.Shooter;
 import org.firstinspires.ftc.teamcode.robot.subsystems.Turret;
 import org.firstinspires.ftc.teamcode.utils.MyTelem;
@@ -40,13 +38,11 @@ public class TeleopRed extends LinearOpMode {
 
         gp2.getGamepadButton(GamepadKeys.Button.B).whenPressed(
                 new ParallelCommandGroup(
-                        new KickerCommand(robot, Kicker.KickerState.ON),
                         new BlockerCommand(robot, Blocker.BlockerState.UNBLOCKED)
                 )
         );
         gp2.getGamepadButton(GamepadKeys.Button.B).whenReleased(
                 new ParallelCommandGroup(
-                        new KickerCommand(robot, Kicker.KickerState.OFF),
                         new BlockerCommand(robot, Blocker.BlockerState.BLOCKED)
                 ));
 
@@ -79,7 +75,6 @@ public class TeleopRed extends LinearOpMode {
 
         gp2.getGamepadButton(GamepadKeys.Button.A).whenPressed(
                 new ParallelCommandGroup(
-                        new KickerCommand(robot, Kicker.KickerState.ON),
                         new BlockerCommand(robot, Blocker.BlockerState.UNBLOCKED),
                         new IntakeCommand(robot, Intake.IntakeState.ON)
                 )
@@ -87,7 +82,6 @@ public class TeleopRed extends LinearOpMode {
 
         gp2.getGamepadButton(GamepadKeys.Button.A).whenReleased(
                 new ParallelCommandGroup(
-                        new KickerCommand(robot, Kicker.KickerState.OFF),
                         new BlockerCommand(robot, Blocker.BlockerState.BLOCKED),
                         new IntakeCommand(robot, Intake.IntakeState.OFF)
                 )

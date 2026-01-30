@@ -24,6 +24,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.CurrentUnit;
 import org.firstinspires.ftc.teamcode.pedroPathing.constants.FConstants;
 import org.firstinspires.ftc.teamcode.pedroPathing.constants.LConstants;
 import org.firstinspires.ftc.teamcode.robot.subsystems.Blocker;
+import org.firstinspires.ftc.teamcode.robot.subsystems.Indexer;
 import org.firstinspires.ftc.teamcode.robot.subsystems.Intake;
 import org.firstinspires.ftc.teamcode.robot.subsystems.Kicker;
 import org.firstinspires.ftc.teamcode.robot.subsystems.LimelightCamera;
@@ -52,10 +53,10 @@ public class  Robot {
     DcMotorEx backLeftMotor, backRightMotor, frontLeftMotor, frontRightMotor;
     DcMotorEx topShooterMotor, bottomShooterMotor, counterRoller;
     DcMotorEx intakeMotor, intakeMotor2;
-    Servo hoodServo;
+    Servo hoodServo, indexServo;
     Servo turretLeftServo, turretRightServo, blockerServo;
     CRServo kickerRightServo, kickerLeftServo;
-
+    public Indexer indexer;
     // all subsystem classes
     public List<LynxModule> hubs;
     public VoltageSensor voltageSensor;
@@ -80,24 +81,23 @@ public class  Robot {
         TurretConstants.OFFSET = 0.5;
 
         follower = new Follower(hm, FConstants.class, LConstants.class);
-
+        indexServo = hm.get(Servo.class, "indexServo");
         topShooterMotor = hm.get(DcMotorEx.class, "topShooter");
         bottomShooterMotor = hm.get(DcMotorEx.class, "counterRoller");
-
+        hoodServo = hm.get(Servo.class, "hoodServo");
         intakeMotor = hm.get(DcMotorEx.class, "intake");
         intakeMotor2 = hm.get(DcMotorEx.class, "intake2");
         turretLeftServo = hm.get(Servo.class, "turretLeftServo");
         turretRightServo = hm.get(Servo.class, "turretRightServo");
         blockerServo = hm.get(Servo.class, "BlockerServo");
-        kickerRightServo = hm.get(CRServo.class, "kickerRightServo");
-        kickerLeftServo = hm.get(CRServo.class, "kickerLeftServo");
+//        kickerRightServo = hm.get(CRServo.class, "kickerRightServo");
+//        kickerLeftServo = hm.get(CRServo.class, "kickerLeftServo");
 
         bottomShooterMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         topShooterMotor.setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
 
         bottomShooterMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         topShooterMotor.setMode(DcMotorEx.RunMode.RUN_WITHOUT_ENCODER);
-        Limelight3A llHw = hm.get(Limelight3A.class, "limelight");
         bottomShooterMotor.setDirection(DcMotorSimple.Direction.REVERSE);
 
         if(!auto){
@@ -108,13 +108,14 @@ public class  Robot {
         }
 
         intake = new Intake(intakeMotor, intakeMotor2);
-        shooter = new Shooter(topShooterMotor, bottomShooterMotor);
+        shooter = new Shooter(topShooterMotor, bottomShooterMotor, hoodServo);
         turret = new Turret(turretLeftServo, turretRightServo);
-        kicker = new Kicker(kickerRightServo, kickerLeftServo);
+//        kicker = new Kicker(kickerRightServo, kickerLeftServo);
+        indexer = new Indexer(indexServo);
         blocker = new Blocker(blockerServo);
-        limelightCamera = new LimelightCamera(llHw, red ? 0 : 1);
+//        limelightCamera = new LimelightCamera(llHw, red ? 0 : 1);
 
-        CommandScheduler.getInstance().registerSubsystem(intake, shooter, turret, kicker, blocker, limelightCamera);
+        CommandScheduler.getInstance().registerSubsystem(intake, shooter, turret, indexer, blocker);
 
         hubs = hm.getAll(LynxModule.class);
         for (LynxModule hub : hubs) {
@@ -134,8 +135,6 @@ public class  Robot {
             MyTelem.addData("Shooter State", shooter.getState());
         if(turret != null)
             MyTelem.addData("Turret State", turret.getState());
-        if(kicker != null)
-            MyTelem.addData("Kicker State", kicker.getState());
 
         for(LynxModule hub : hubs){
             hub.clearBulkCache();
