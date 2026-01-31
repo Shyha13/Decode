@@ -1,6 +1,6 @@
 package org.firstinspires.ftc.teamcode.robot.subsystems;
 
-import static org.firstinspires.ftc.teamcode.utils.constants.HoodConstants.hoodServoPosition;
+import static org.firstinspires.ftc.teamcode.utils.constants.ShooterConstants.hoodServoPosition;
 import static org.firstinspires.ftc.teamcode.utils.constants.ShooterConstants.RPM_OFFSET;
 import static org.firstinspires.ftc.teamcode.utils.constants.ShooterConstants.startingVelocity;
 import static org.firstinspires.ftc.teamcode.utils.constants.ShooterConstants.tuningTestingRPM;
@@ -17,7 +17,7 @@ import com.qualcomm.robotcore.util.Range;
 
 import org.firstinspires.ftc.teamcode.robot.Robot;
 import org.firstinspires.ftc.teamcode.utils.MyTelem;
-import org.firstinspires.ftc.teamcode.utils.constants.HoodConstants;
+import org.firstinspires.ftc.teamcode.utils.constants.ShooterConstants;
 import org.firstinspires.ftc.teamcode.utils.constants.ShooterConstants;
 
 public class Shooter implements Subsystem {
@@ -39,15 +39,15 @@ public class Shooter implements Subsystem {
         switch (state) {
             case CLOSE:
                 currentVelocity = ShooterConstants.closeShootRPM;
-                hoodServoPosition = HoodConstants.closeHoodAngle;
+                hoodServoPosition = ShooterConstants.closeHoodAngle;
                 break;
             case STOP:
                 currentVelocity = startingVelocity;
-                hoodServoPosition = HoodConstants.openAngle;
+                hoodServoPosition = ShooterConstants.openAngle;
                 break;
             case TESTING:
                 currentVelocity = tuningTestingRPM;
-                hoodServoPosition = HoodConstants.tuningTestingHoodPosition;
+                hoodServoPosition = ShooterConstants.tuningTestingHoodPosition;
                 break;
             case SPEEDING_UP:
                 currentVelocity = ShooterConstants.speedingVelocity;
