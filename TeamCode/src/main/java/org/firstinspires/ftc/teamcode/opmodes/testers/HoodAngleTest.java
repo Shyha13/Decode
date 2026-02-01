@@ -9,7 +9,7 @@ import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.robot.Robot;
 import org.firstinspires.ftc.teamcode.robot.subsystems.Shooter;
 import org.firstinspires.ftc.teamcode.utils.MyTelem;
-import org.firstinspires.ftc.teamcode.utils.constants.HoodConstants;
+import org.firstinspires.ftc.teamcode.utils.constants.ShooterConstants;
 import org.firstinspires.ftc.teamcode.utils.constants.ShooterConstants;
 
 @Config
