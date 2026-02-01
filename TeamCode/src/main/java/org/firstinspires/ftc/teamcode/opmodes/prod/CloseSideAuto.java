@@ -69,7 +69,7 @@ public class CloseSideAuto extends OpMode {
                                 Shooter.ShooterState.TESTING;
 
         auto = new SequentialCommandGroup(
-                new TurretCommand(robot, Turret.TurretState.MATH_CAMERA),
+                new TurretCommand(robot, Turret.TurretState.MATH),
                 new IntakeCommand(robot, Intake.IntakeState.ON),
                 new ShooterCommand(robot, shooterState),
                 new ParallelCommandGroup(
@@ -84,7 +84,7 @@ public class CloseSideAuto extends OpMode {
                 new WaitCommand(200),
                 new ParallelCommandGroup(
                         new FollowPathCommand(robot.follower, paths.Path3),
-                        new TurretCommand(robot, Turret.TurretState.MATH_CAMERA),
+                        new TurretCommand(robot, Turret.TurretState.MATH),
                         new ShooterCommand(robot, shooterState)
                 ),
                 shootThree(),
@@ -96,7 +96,7 @@ public class CloseSideAuto extends OpMode {
                 new FollowPathCommand(robot.follower, paths.LeverIntakePath),
                 new WaitCommand(1300),
                 new ParallelCommandGroup(
-                        new TurretCommand(robot, Turret.TurretState.MATH_CAMERA),
+                        new TurretCommand(robot, Turret.TurretState.MATH),
                         new FollowPathCommand(robot.follower, paths.LeverReturnPath)
                 ),
                 shootThree(),
@@ -108,7 +108,7 @@ public class CloseSideAuto extends OpMode {
                 new FollowPathCommand(robot.follower, paths.LeverIntakePath2),
                 new WaitCommand(1300),
                 new ParallelCommandGroup(
-                        new TurretCommand(robot, Turret.TurretState.MATH_CAMERA),
+                        new TurretCommand(robot, Turret.TurretState.MATH),
                         new FollowPathCommand(robot.follower, paths.LeverReturnPath2),
                         new SequentialCommandGroup(
                                 new WaitCommand(300),
@@ -128,7 +128,7 @@ public class CloseSideAuto extends OpMode {
                             new WaitCommand(300),
                             new IntakeCommand(robot, Intake.IntakeState.ON)
                     ),
-                    new TurretCommand(robot, Turret.TurretState.MATH_CAMERA),
+                    new TurretCommand(robot, Turret.TurretState.MATH),
                     new ShooterCommand(robot, shooterState)
                 ),
                 shootThree(),
@@ -138,7 +138,7 @@ public class CloseSideAuto extends OpMode {
                     new FollowPathCommand(robot.follower, paths.Path6)
                 ),
                 new InstantCommand(() -> TurretConstants.closeTolerance = 10),
-                new TurretCommand(robot, Turret.TurretState.MATH_CAMERA),
+                new TurretCommand(robot, Turret.TurretState.MATH),
                 new ParallelCommandGroup(
                     new FollowPathCommand(robot.follower, paths.Path7),
                     new SequentialCommandGroup(
