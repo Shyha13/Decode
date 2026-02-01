@@ -48,7 +48,7 @@ public class TeleopRed extends LinearOpMode {
 
         gp2.getGamepadButton(GamepadKeys.Button.DPAD_UP).whenPressed(
                 new ParallelCommandGroup(
-                    new TurretCommand(robot, Turret.TurretState.MATH_CAMERA),
+                    new TurretCommand(robot, Turret.TurretState.MATH),
                     new ShooterCommand(robot, Shooter.ShooterState.SPEEDING_UP)
                 )
         );
