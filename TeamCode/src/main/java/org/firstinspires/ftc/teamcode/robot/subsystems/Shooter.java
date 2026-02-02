@@ -54,22 +54,19 @@ public class Shooter implements Subsystem {
                 currentVelocity = ShooterConstants.speedingVelocity;
                 break;
             case MATH:
-                double rpm = Robot.getShooterMathRPM();
-                double hoodAngle = Robot.getHoodAngle();
-                double turretAngle = Robot.getTurretAngle();
-
+                double hoodAngle = setHood(Robot.getHoodAngle());
+                double rpm = getRPM(Robot.getShooterMathRPM(), hoodAngle);
                 setHood(hoodAngle);
-                MyTelem.addData("TURRET ANGLE", turretAngle);
                 MyTelem.addData("HOOD ANGLE", hoodAngle);
                 MyTelem.addData("HOOD POSITION", hoodServoPosition);
                 MyTelem.addData("RPM", rpm);
-//                currentVelocity = rpm;
+                currentVelocity = rpm;
                 break;
         }
     }
-    public void setHood(double angleRad) {
-        double minAngle = ShooterMathConstants.HOOD_MIN_ANGLE;
-        double maxAngle = ShooterMathConstants.HOOD_MAX_ANGLE;
+    public double setHood(double angleRad) {
+        double minAngle = ShooterMathConstants.HOOD_MIN_ANGLE; //0.32
+        double maxAngle = ShooterMathConstants.HOOD_MAX_ANGLE; //0.17
         double minServo = 0.17;
         double maxServo = 0.32;
         angleRad = Math.max(minAngle, Math.min(maxAngle, angleRad));
@@ -77,13 +74,14 @@ public class Shooter implements Subsystem {
                 + (angleRad - minAngle)
                 * (maxServo - minServo)
                 / (maxAngle - minAngle);
+        return hoodServoPosition;
     }
-    public double getRPM(Pose pose){
-        Vector velocity = Robot.velocity;
-        double distance = Robot.getDistanceFromGoal(pose);
-        double speed = 0.0270551 * distance * distance + 2.69484 * distance + 3513.8641;
-        MyTelem.addData("speed", speed);
-        return speed;
+    public double getRPM(double velocity, double hood){
+        double hoodMultiplier = 2.79242 * hood * hood - 2.05502 * hood * 1.29534;
+        double baseRPM = 24.27316 * velocity - 1943.16341;
+        MyTelem.addData("HOOD MULTIPLIER", hoodMultiplier);
+        MyTelem.addData("BASE RPM", baseRPM);
+        return baseRPM * hoodMultiplier;
     }
 
     public double ticksPerSecToRPM(double tps){
