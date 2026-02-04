@@ -4,6 +4,7 @@ import com.arcrobotics.ftclib.command.CommandScheduler;
 import com.arcrobotics.ftclib.command.InstantCommand;
 import com.arcrobotics.ftclib.command.ParallelCommandGroup;
 import com.arcrobotics.ftclib.command.SequentialCommandGroup;
+import com.arcrobotics.ftclib.command.WaitCommand;
 import com.arcrobotics.ftclib.command.button.Trigger;
 import com.arcrobotics.ftclib.gamepad.GamepadEx;
 import com.arcrobotics.ftclib.gamepad.GamepadKeys;
@@ -14,11 +15,13 @@ import org.firstinspires.ftc.teamcode.robot.Robot;
 import org.firstinspires.ftc.teamcode.robot.commands.botcommands.TransferCancelCommand;
 import org.firstinspires.ftc.teamcode.robot.commands.botcommands.TransferCommand;
 import org.firstinspires.ftc.teamcode.robot.commands.subsystemcommands.BlockerCommand;
+import org.firstinspires.ftc.teamcode.robot.commands.subsystemcommands.IndexerCommand;
 import org.firstinspires.ftc.teamcode.robot.commands.subsystemcommands.IntakeCommand;
 import org.firstinspires.ftc.teamcode.robot.commands.subsystemcommands.KickerCommand;
 import org.firstinspires.ftc.teamcode.robot.commands.subsystemcommands.ShooterCommand;
 import org.firstinspires.ftc.teamcode.robot.commands.subsystemcommands.TurretCommand;
 import org.firstinspires.ftc.teamcode.robot.subsystems.Blocker;
+import org.firstinspires.ftc.teamcode.robot.subsystems.Indexer;
 import org.firstinspires.ftc.teamcode.robot.subsystems.Intake;
 import org.firstinspires.ftc.teamcode.robot.subsystems.Kicker;
 import org.firstinspires.ftc.teamcode.robot.subsystems.Shooter;
@@ -53,25 +56,25 @@ public class TeleopBlue extends LinearOpMode {
 
         gp2.getGamepadButton(GamepadKeys.Button.DPAD_UP).whenPressed(
                 new ParallelCommandGroup(
+                        new TurretCommand(robot, Turret.TurretState.MATH),
                         new ShooterCommand(robot, Shooter.ShooterState.SPEEDING_UP)
                 )
         );
         gp2.getGamepadButton(GamepadKeys.Button.DPAD_UP).whenReleased(
                 new ParallelCommandGroup(
+                        new TurretCommand(robot, Turret.TurretState.FRONT),
                         new ShooterCommand(robot, Shooter.ShooterState.STOP)
                 )
         );
 
         gp2.getGamepadButton(GamepadKeys.Button.Y).whenPressed(
-                new SequentialCommandGroup(
-                        new TurretCommand(robot, Turret.TurretState.MATH),
+                new ParallelCommandGroup(
                         new TransferCommand(robot)
                 )
         );
         gp2.getGamepadButton(GamepadKeys.Button.Y).whenReleased(
-                new SequentialCommandGroup(
-                        new TransferCancelCommand(robot),
-                        new TurretCommand(robot, Turret.TurretState.FRONT)
+                new ParallelCommandGroup(
+                        new TransferCancelCommand(robot)
                 )
         );
 
@@ -98,6 +101,20 @@ public class TeleopBlue extends LinearOpMode {
                 new InstantCommand(robot::stopHolding)
         );
 
+        gp2.getGamepadButton(GamepadKeys.Button.DPAD_DOWN).whenPressed(
+                new SequentialCommandGroup(
+                        new IndexerCommand(robot, Indexer.IndexState.OUT),
+                        new WaitCommand(150),
+                        new IntakeCommand(robot, Intake.IntakeState.ON)
+                )
+        );
+
+        gp2.getGamepadButton(GamepadKeys.Button.DPAD_DOWN).whenReleased(
+                new SequentialCommandGroup(
+                        new IntakeCommand(robot, Intake.IntakeState.OFF),
+                        new IndexerCommand(robot, Indexer.IndexState.IN)
+                )
+        );
 //        gp1.getGamepadButton(GamepadKeys.Button.A).whenPressed(
 //                new MoveToCloseShootCommand(robot)
 //        );

@@ -3,6 +3,8 @@ package org.firstinspires.ftc.teamcode.opmodes.prod;
 import com.arcrobotics.ftclib.command.CommandScheduler;
 import com.arcrobotics.ftclib.command.InstantCommand;
 import com.arcrobotics.ftclib.command.ParallelCommandGroup;
+import com.arcrobotics.ftclib.command.SequentialCommandGroup;
+import com.arcrobotics.ftclib.command.WaitCommand;
 import com.arcrobotics.ftclib.gamepad.GamepadEx;
 import com.arcrobotics.ftclib.gamepad.GamepadKeys;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
@@ -12,10 +14,12 @@ import org.firstinspires.ftc.teamcode.robot.Robot;
 import org.firstinspires.ftc.teamcode.robot.commands.botcommands.TransferCancelCommand;
 import org.firstinspires.ftc.teamcode.robot.commands.botcommands.TransferCommand;
 import org.firstinspires.ftc.teamcode.robot.commands.subsystemcommands.BlockerCommand;
+import org.firstinspires.ftc.teamcode.robot.commands.subsystemcommands.IndexerCommand;
 import org.firstinspires.ftc.teamcode.robot.commands.subsystemcommands.IntakeCommand;
 import org.firstinspires.ftc.teamcode.robot.commands.subsystemcommands.ShooterCommand;
 import org.firstinspires.ftc.teamcode.robot.commands.subsystemcommands.TurretCommand;
 import org.firstinspires.ftc.teamcode.robot.subsystems.Blocker;
+import org.firstinspires.ftc.teamcode.robot.subsystems.Indexer;
 import org.firstinspires.ftc.teamcode.robot.subsystems.Intake;
 import org.firstinspires.ftc.teamcode.robot.subsystems.Shooter;
 import org.firstinspires.ftc.teamcode.robot.subsystems.Turret;
@@ -93,6 +97,21 @@ public class TeleopRed extends LinearOpMode {
 
         gp1.getGamepadButton(GamepadKeys.Button.RIGHT_BUMPER).whenReleased(
                 new InstantCommand(robot::stopHolding)
+        );
+
+        gp2.getGamepadButton(GamepadKeys.Button.DPAD_DOWN).whenPressed(
+                new SequentialCommandGroup(
+                        new IndexerCommand(robot, Indexer.IndexState.OUT),
+                        new WaitCommand(150),
+                        new IntakeCommand(robot, Intake.IntakeState.ON)
+                )
+        );
+
+        gp2.getGamepadButton(GamepadKeys.Button.DPAD_DOWN).whenReleased(
+                new SequentialCommandGroup(
+                        new IntakeCommand(robot, Intake.IntakeState.OFF),
+                        new IndexerCommand(robot, Indexer.IndexState.IN)
+                )
         );
 
 //        gp1.getGamepadButton(GamepadKeys.Button.A).whenPressed(
