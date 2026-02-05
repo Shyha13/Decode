@@ -352,7 +352,7 @@ public class  Robot {
             return lastGood;
         }
 
-        double turretVelCompOffset = Math.atan2(perpendicularComponent, ivr);
+        double turretVelCompOffset = Math.atan2(perpendicularComponent, ivr) * ShooterMathConstants.perpMultiplier;
 
         double turretAngle = Math.toDegrees(
                 Robot.currentPose.getHeading() - goalTheta + turretVelCompOffset
