@@ -6,8 +6,8 @@ import static org.firstinspires.ftc.teamcode.utils.constants.auto.AutoConstants.
 import com.acmerobotics.dashboard.config.Config;
 @Config
 public class BotConstants {
-    public static double goalX = 144;
-    public static double goalY = 144;
+    public static double goalX = 138;
+    public static double goalY = 138;
     public static double goalDY = 24; //correct later
     public static double cameraYaw = 12;
     public static double turnSpeed = 0.7;
