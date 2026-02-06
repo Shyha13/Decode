@@ -96,6 +96,8 @@ public class  Robot {
         intakeMotor2 = hm.get(DcMotorEx.class, "intake2");
         turretLeftServo = hm.get(Servo.class, "turretLeftServo");
         turretRightServo = hm.get(Servo.class, "turretRightServo");
+        turretLeftServo.setDirection(Servo.Direction.REVERSE);
+        turretRightServo.setDirection(Servo.Direction.REVERSE);
         blockerServo = hm.get(Servo.class, "BlockerServo");
 //        distanceSensor = hm.get(RevColorSensorV3.class, "distanceSensor");
 //        kickerRightServo = hm.get(CRServo.class, "kickerRightServo");
