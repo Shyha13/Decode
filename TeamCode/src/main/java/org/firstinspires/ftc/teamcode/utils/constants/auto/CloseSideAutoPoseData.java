@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode.utils.constants.auto;
 
 import static org.firstinspires.ftc.teamcode.utils.constants.auto.AutoConstants.leverIntakeX;
 import static org.firstinspires.ftc.teamcode.utils.constants.auto.AutoConstants.leverIntakeY;
+import static org.firstinspires.ftc.teamcode.utils.constants.auto.AutoConstants.startHeading;
 import static org.firstinspires.ftc.teamcode.utils.constants.auto.AutoConstants.startX;
 import static org.firstinspires.ftc.teamcode.utils.constants.auto.AutoConstants.startY;
 
@@ -10,7 +11,7 @@ import com.pedropathing.localization.Pose;
 
 @Config
 public class CloseSideAutoPoseData {
-    public static final Pose START_POSE     = new Pose(startX, startY, Math.toRadians(143.7));
+    public static final Pose START_POSE     = new Pose(startX, startY, Math.toRadians(startHeading));
     public static final Pose SHOOTING_POSE  = new Pose(AutoConstants.shootingX, AutoConstants.shootingY);
     public static final Pose MID1_CURVE     = new Pose(52.3, 85);     // path2 control point
     public static final Pose FIRST_INTAKE   = new Pose(AutoConstants.firstIntakeX, 87.000);
@@ -22,7 +23,6 @@ public class CloseSideAutoPoseData {
     public static final Pose FINAL_INTAKE   = new Pose(AutoConstants.secondIntakeX, 38.5);
     public static final Pose FINAL_SHOOT   = new Pose(63, 102);
     public static final Pose LEVER_INTAKE = new Pose(leverIntakeX, leverIntakeY);
-    public static final double START_HEADING  = AutoConstants.startHeading;
     public static final double SHOOTING_HEADING = AutoConstants.shootingAngle;
     public static double mirrorX(double x, String color) {
         return color.equals("RED") ? 144 - x : x;

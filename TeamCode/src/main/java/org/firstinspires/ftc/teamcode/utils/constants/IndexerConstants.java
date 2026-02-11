@@ -4,8 +4,8 @@ import com.acmerobotics.dashboard.config.Config;
 
 @Config
 public class IndexerConstants {
-    public static double inPosition = 0.9;
-    public static double outPosition = 0.45;
+    public static double inPosition = 0.8;
+    public static double outPosition = 0.35;
 
     public static double greenRatio = 1;
     public static double greenThreshold = 150;
