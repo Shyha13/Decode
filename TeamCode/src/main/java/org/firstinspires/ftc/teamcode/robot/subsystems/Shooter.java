@@ -124,18 +124,18 @@ public class Shooter implements Subsystem {
     public void periodic() {
         setState(state);
         shooterRPMPID.setPID(ShooterConstants.kp, ShooterConstants.ki, ShooterConstants.kd);
-        if (Robot.auto && ShooterConstants.karthikstfu) {
-            hoodServo.setPosition(0.32);
-        }
-        else {
+//        if (Robot.auto && ShooterConstants.karthikstfu) {
+//            hoodServo.setPosition(0.32);
+//        }
+//        else {
             hoodServo.setPosition(hoodServoPosition);
-        }
-        if (karthikstfu && Robot.auto) {
-            setShooterPIDPower(speedingVelocity);
-        }
-        else {
+//        }
+//        if (karthikstfu && Robot.auto) {
+//            setShooterPIDPower(speedingVelocity);
+//        }
+//        else {
             setShooterPIDPower(currentVelocity);
-        }
+//        }
     }
 
     public enum ShooterState {

@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.opmodes.testers;
 
 import com.acmerobotics.dashboard.config.Config;
+import com.arcrobotics.ftclib.command.CommandScheduler;
 import com.arcrobotics.ftclib.gamepad.GamepadEx;
 import com.arcrobotics.ftclib.gamepad.GamepadKeys;
 import com.pedropathing.localization.Pose;
@@ -33,6 +34,7 @@ public class IntakeTester extends LinearOpMode {
 
         if(isStarted()){
             robot.follower.startTeleopDrive();
+            CommandScheduler.getInstance().schedule(new IntakeCommand(robot, Intake.IntakeState.ON));
         }
 
         while (opModeIsActive()) {

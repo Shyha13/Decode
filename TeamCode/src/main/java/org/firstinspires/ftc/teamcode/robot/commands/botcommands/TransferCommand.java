@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode.robot.commands.botcommands;
 
 import static org.firstinspires.ftc.teamcode.robot.subsystems.Intake.IntakeState.OFF;
 import static org.firstinspires.ftc.teamcode.robot.subsystems.Intake.IntakeState.ON;
+import static org.firstinspires.ftc.teamcode.robot.subsystems.Intake.IntakeState.SOLOFRONT;
 
 import com.acmerobotics.dashboard.config.Config;
 import com.arcrobotics.ftclib.command.ParallelCommandGroup;
@@ -27,7 +28,7 @@ import org.firstinspires.ftc.teamcode.utils.constants.BotConstants;
 public class TransferCommand extends SequentialCommandGroup {
     public TransferCommand(Robot robot, Shooter.ShooterState shooterState) {
         addCommands(
-                new IntakeCommand(robot, OFF),
+                new IntakeCommand(robot, SOLOFRONT),
                 new ShooterCommand(robot, shooterState),
                 new ParallelRaceGroup(
                         new WaitUntilCommand(() -> robot.shooter.shooterAtRPM()),
@@ -36,7 +37,7 @@ public class TransferCommand extends SequentialCommandGroup {
                 new BlockerCommand(robot, Blocker.BlockerState.UNBLOCKED),
                 new WaitCommand(200),
                 new IntakeCommand(robot, ON),
-                new WaitCommand(450)
+                new WaitCommand(550)
         );
     }
     public TransferCommand(Robot robot){

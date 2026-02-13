@@ -67,7 +67,7 @@ public class CloseSideAuto extends OpMode {
 
         auto = new SequentialCommandGroup(
                 new TurretCommand(robot, Turret.TurretState.MATH),
-                new IntakeCommand(robot, Intake.IntakeState.ON),
+                new IntakeCommand(robot, Intake.IntakeState.SOLOFRONT),
                 new FollowPathCommand(robot.follower, paths.Path1),
                 shootThree(),
                 new IntakeCommand(robot, Intake.IntakeState.ON),
@@ -89,6 +89,7 @@ public class CloseSideAuto extends OpMode {
                 ),
                 shootThree(),
                 new FollowPathCommand(robot.follower, paths.LeverPath2),
+                new WaitCommand(300),
                 new IntakeCommand(robot, Intake.IntakeState.ON),
                 new FollowPathCommand(robot.follower, paths.LeverIntakePath2),
                 new WaitCommand(500),

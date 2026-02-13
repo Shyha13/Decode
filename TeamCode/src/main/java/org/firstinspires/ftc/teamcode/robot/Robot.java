@@ -254,7 +254,7 @@ public class  Robot {
             return new Pose(144-15, 144-11);
         }
         else{
-            return new Pose(0, 144);
+            return new Pose(15, 144-11);
         }
     }
 
