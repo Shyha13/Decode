@@ -5,30 +5,43 @@ import static org.firstinspires.ftc.teamcode.utils.constants.auto.AutoConstants.
 import static org.firstinspires.ftc.teamcode.utils.constants.auto.AutoConstants.leverX;
 import static org.firstinspires.ftc.teamcode.utils.constants.auto.AutoConstants.leverY;
 import static org.firstinspires.ftc.teamcode.utils.constants.auto.AutoConstants.leverYNew;
+import static org.firstinspires.ftc.teamcode.utils.constants.auto.AutoConstants.lvHead;
+import static org.firstinspires.ftc.teamcode.utils.constants.auto.AutoConstants.lvX;
+import static org.firstinspires.ftc.teamcode.utils.constants.auto.AutoConstants.lvY;
+import static org.firstinspires.ftc.teamcode.utils.constants.auto.AutoConstants.nStart;
+import static org.firstinspires.ftc.teamcode.utils.constants.auto.AutoConstants.s2ConX;
+import static org.firstinspires.ftc.teamcode.utils.constants.auto.AutoConstants.s2ConY;
+import static org.firstinspires.ftc.teamcode.utils.constants.auto.AutoConstants.s3ConX;
+import static org.firstinspires.ftc.teamcode.utils.constants.auto.AutoConstants.s3ConY;
+import static org.firstinspires.ftc.teamcode.utils.constants.auto.AutoConstants.s3Head;
+import static org.firstinspires.ftc.teamcode.utils.constants.auto.AutoConstants.s3X;
+import static org.firstinspires.ftc.teamcode.utils.constants.auto.AutoConstants.s3Y;
 import static org.firstinspires.ftc.teamcode.utils.constants.auto.AutoConstants.startHeading;
 import static org.firstinspires.ftc.teamcode.utils.constants.auto.AutoConstants.startX;
 import static org.firstinspires.ftc.teamcode.utils.constants.auto.AutoConstants.startY;
 
 import com.acmerobotics.dashboard.config.Config;
 import com.pedropathing.localization.Pose;
+import com.pedropathing.pathgen.Point;
 
 @Config
 public class CloseSideAutoPoseData {
-    public static final Pose LEVER_SECOND     = new Pose(leverX, leverYNew);
-
-    public static final Pose START_POSE     = new Pose(startX, startY, Math.toRadians(startHeading));
-    public static final Pose SHOOTING_POSE  = new Pose(AutoConstants.shootingX, AutoConstants.shootingY);
-    public static final Pose MID1_CURVE     = new Pose(52.3, 85);     // path2 control point
-    public static final Pose FIRST_INTAKE   = new Pose(AutoConstants.firstIntakeX, 85.500);
-    public static final Pose MID2_CURVE     = new Pose(66, 52);           // path4 control point
-    public static final Pose SECOND_INTAKE  = new Pose(AutoConstants.secondIntakeX, AutoConstants.secondIntakeY);
-    public static final Pose LEVER = new Pose(AutoConstants.leverX, AutoConstants.leverY);
-    public static final Pose LEVER_CONTROL = new Pose(AutoConstants.leverPoseX, AutoConstants.leverPoseY);
-    public static final Pose MID3_CURVE    = new Pose(79, 28);           // path6 control point
-    public static final Pose FINAL_INTAKE   = new Pose(AutoConstants.secondIntakeX, 37.5);
-    public static final Pose FINAL_SHOOT   = new Pose(63, 102);
     public static final Pose LEVER_INTAKE = new Pose(leverIntakeX, leverIntakeY);
-    public static final double SHOOTING_HEADING = AutoConstants.shootingAngle;
+    public static final Pose startPose = new Pose(startX, startY, Math.toRadians(nStart));
+    public static final Pose shoot1 = new Pose(27.5,115.5,AutoConstants.shootingAngle);
+    public static final Pose shootInt = new Pose(48,96,AutoConstants.shootingAngle);
+
+    public static final Pose shoot = new Pose(AutoConstants.shootingX, AutoConstants.shootingY, AutoConstants.shootingAngle);
+
+    public static final Pose s1 = new Pose (AutoConstants.s1X,AutoConstants.s1Y,AutoConstants.s1Head);
+    public static final Pose s2 = new Pose (AutoConstants.s2X, AutoConstants.s2Y, AutoConstants.s2Head);
+
+    public static final Pose s3 = new Pose (AutoConstants.s3X,AutoConstants.s3Y,AutoConstants.s3Head);
+
+    public static final Pose s2Con = new Pose(s2ConX, s2ConY, Point.CARTESIAN);
+    public static final Pose s3Con = new Pose(s3ConX, s3ConY, Point.CARTESIAN);
+
+    public static final Pose lever = new Pose(lvX,lvY, Math.toRadians(lvHead));
     public static double mirrorX(double x, String color) {
         return color.equals("RED") ? 144 - x : x;
     }

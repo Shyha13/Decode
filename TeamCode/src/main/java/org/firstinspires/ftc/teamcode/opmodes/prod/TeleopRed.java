@@ -40,7 +40,7 @@ public class TeleopRed extends LinearOpMode {
 
         gp2.getGamepadButton(GamepadKeys.Button.B).whenPressed(
                 new SequentialCommandGroup(
-                        new IndexerCommand(robot, Indexer.IndexState.OUT),
+                    //    new IndexerCommand(robot, Indexer.IndexState.OUT),
                         new WaitCommand(150),
                         new TransferCommand(robot)
 
@@ -48,7 +48,7 @@ public class TeleopRed extends LinearOpMode {
         );
         gp2.getGamepadButton(GamepadKeys.Button.B).whenReleased(
                 new SequentialCommandGroup(
-                        new IndexerCommand(robot, Indexer.IndexState.IN),
+                     //   new IndexerCommand(robot, Indexer.IndexState.IN),
                         new WaitCommand(400),
                         new TransferCancelCommand(robot)
 
@@ -59,7 +59,7 @@ public class TeleopRed extends LinearOpMode {
                 new ParallelCommandGroup(
                     new TurretCommand(robot, Turret.TurretState.MATH),
                     new ShooterCommand(robot, Shooter.ShooterState.SPEEDING_UP),
-                        new IntakeCommand(robot, Intake.IntakeState.SOLOFRONT)
+                        new IntakeCommand(robot, Intake.IntakeState.ON)
                 )
         );
         gp2.getGamepadButton(GamepadKeys.Button.DPAD_UP).whenReleased(

@@ -28,7 +28,7 @@ import org.firstinspires.ftc.teamcode.utils.constants.BotConstants;
 public class TransferCommand extends SequentialCommandGroup {
     public TransferCommand(Robot robot, Shooter.ShooterState shooterState) {
         addCommands(
-                new IntakeCommand(robot, SOLOFRONT),
+                new IntakeCommand(robot, ON),
                 new ShooterCommand(robot, shooterState),
                 new ParallelRaceGroup(
                         new WaitUntilCommand(() -> robot.shooter.shooterAtRPM()),

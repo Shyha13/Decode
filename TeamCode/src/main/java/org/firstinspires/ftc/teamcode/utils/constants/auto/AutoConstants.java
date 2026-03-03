@@ -1,28 +1,53 @@
 package org.firstinspires.ftc.teamcode.utils.constants.auto;
 
 import com.acmerobotics.dashboard.config.Config;
+import com.pedropathing.localization.Pose;
 
 @Config
 public class AutoConstants {
-    public static double leverHitHeading = 140;
     public static double finalShootHeading = 225;
     public static double startHeading = 322.78;
+
+    public static double nStart = 318.08;
     public static double shootingAngle = 180;
-    public static double leverHeading = 140;
-    public static double secondIntakeY = 60;
     public static double shootingX = 64;
     public static double shootingY = 80;
-    public static double firstIntakeX = 22;
-    public static double secondIntakeX = 17;
     public static double leverYNew = 63.25;
     public static double leverIntakeX = 13;
-    public static double leverIntakeY = 59;
-    public static double leverPoseX = 35; //control point
-    public static double leverPoseY = 59; //control point
-    public static double leverWait = 100;
-    public static double startX = 18.91;
-    public static double startY = 122.4;
+    public static double leverIntakeY = 57;
+    public static double startX = 23.448;
+    public static double startY = 126.26;
     public static double leverX = 13.5;
     public static double leverY = 63.25;
+
+
+    public static double s1Y = 90;
+    public static double s1X = 25;
+    public static double s1Head = Math.toRadians(270);
+
+
+    public static double s2Y = 60;
+    public static double s2X = 25;
+    public static double s2Head = Math.toRadians(180);
+    public static double s2ConX = 32;
+    public static double s2ConY = 84;
+
+
+    public static double s3Y = 36;
+    public static double s3X = 17;
+    public static double s3ConX = 79;
+    public static double s3ConY = 28;
+    public static double s3Head = Math.toRadians(180);
+
+
+    public static double lvX = 13.75;
+
+    public static double lvY = 62.5;
+    public static double lvHead = 140;
+
+    public static double intakeHead = 135;
+
+
+
 
 }
