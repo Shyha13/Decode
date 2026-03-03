@@ -10,7 +10,7 @@ public class BotConstants {
     public static double goalY = 138;
     public static double goalDY = 24; //correct later
     public static double cameraYaw = 12;
-    public static double turnSpeed = 0.7;
+    public static double turnSpeed = 1;
     public enum BotState{
         MATH, MANUAL, TESTING
     }

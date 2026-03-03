@@ -10,10 +10,7 @@ import com.pedropathing.localization.Pose;
 import com.pedropathing.pathgen.MathFunctions;
 import com.pedropathing.pathgen.Point;
 import com.pedropathing.pathgen.Vector;
-import com.qualcomm.hardware.limelightvision.Limelight3A;
 import com.qualcomm.hardware.lynx.LynxModule;
-import com.qualcomm.hardware.rev.RevColorSensorV3;
-import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
@@ -25,24 +22,19 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 import org.firstinspires.ftc.robotcore.external.navigation.CurrentUnit;
 import org.firstinspires.ftc.teamcode.pedroPathing.constants.FConstants;
 import org.firstinspires.ftc.teamcode.pedroPathing.constants.LConstants;
-import org.firstinspires.ftc.teamcode.robot.commands.subsystemcommands.LightsCommand;
 import org.firstinspires.ftc.teamcode.robot.subsystems.Blocker;
-import org.firstinspires.ftc.teamcode.robot.subsystems.DistanceSensor;
 import org.firstinspires.ftc.teamcode.robot.subsystems.Indexer;
 import org.firstinspires.ftc.teamcode.robot.subsystems.Intake;
 import org.firstinspires.ftc.teamcode.robot.subsystems.Kicker;
-import org.firstinspires.ftc.teamcode.robot.subsystems.Lights;
 import org.firstinspires.ftc.teamcode.robot.subsystems.LimelightCamera;
 import org.firstinspires.ftc.teamcode.robot.subsystems.Shooter;
 import org.firstinspires.ftc.teamcode.robot.subsystems.Turret;
 import org.firstinspires.ftc.teamcode.utils.MyTelem;
-import org.firstinspires.ftc.teamcode.utils.Prism.GoBildaPrismDriver;
 import org.firstinspires.ftc.teamcode.utils.constants.BotConstants;
 import org.firstinspires.ftc.teamcode.utils.constants.ShooterConstants;
 import org.firstinspires.ftc.teamcode.utils.constants.ShooterMathConstants;
 import org.firstinspires.ftc.teamcode.utils.constants.TurretConstants;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
@@ -65,8 +57,6 @@ public class  Robot {
     DcMotorEx intakeMotor, intakeMotor2;
     Servo hoodServo, indexServo;
     Servo turretLeftServo, turretRightServo, blockerServo;
-    GoBildaPrismDriver prism;
-    CRServo kickerRightServo, kickerLeftServo;
     public Indexer indexer;
     // all subsystem classes
     public List<LynxModule> hubs;
@@ -77,9 +67,6 @@ public class  Robot {
     public Kicker kicker;
     public Blocker blocker;
 
-    public Lights lights;
-
-//    public RevColorSensorV3 distanceSensor;
     public static LimelightCamera limelightCamera;
     public Robot(HardwareMap hm, boolean isAuto, String color){
         this(hm, isAuto);
@@ -104,21 +91,17 @@ public class  Robot {
         TurretConstants.OFFSET = 0.5;
 
         follower = new Follower(hm, FConstants.class, LConstants.class);
-        indexServo = hm.get(Servo.class, "indexServo");
-        topShooterMotor = hm.get(DcMotorEx.class, "topShooter");
-        bottomShooterMotor = hm.get(DcMotorEx.class, "counterRoller");
-        hoodServo = hm.get(Servo.class, "hoodServo");
+//        indexServo = hm.get(Servo.class, "indexServo");
+        topShooterMotor = hm.get(DcMotorEx.class, "flywheel1");
+        bottomShooterMotor = hm.get(DcMotorEx.class, "flywheel2");
+        hoodServo = hm.get(Servo.class, "hood");
         intakeMotor = hm.get(DcMotorEx.class, "intake");
-        intakeMotor2 = hm.get(DcMotorEx.class, "intake2");
-        turretLeftServo = hm.get(Servo.class, "turretLeftServo");
-        turretRightServo = hm.get(Servo.class, "turretRightServo");
+        intakeMotor2 = hm.get(DcMotorEx.class, "transfer");
+        turretLeftServo = hm.get(Servo.class, "turret1");
+        turretRightServo = hm.get(Servo.class, "turret2");
         turretLeftServo.setDirection(Servo.Direction.REVERSE);
         turretRightServo.setDirection(Servo.Direction.REVERSE);
-        blockerServo = hm.get(Servo.class, "BlockerServo");
-////        prism = hm.get(GoBildaPrismDriver.class, "prism");
-//        distanceSensor = hm.get(RevColorSensorV3.class, "distanceSensor");
-//        kickerRightServo = hm.get(CRServo.class, "kickerRightServo");
-//        kickerLeftServo = hm.get(CRServo.class, "kickerLeftServo");
+        blockerServo = hm.get(Servo.class, "blocker");
 
         bottomShooterMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         topShooterMotor.setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
@@ -138,13 +121,13 @@ public class  Robot {
         shooter = new Shooter(topShooterMotor, bottomShooterMotor, hoodServo);
         turret = new Turret(turretLeftServo, turretRightServo);
 //        kicker = new Kicker(kickerRightServo, kickerLeftServo);
-        indexer = new Indexer(indexServo);
+//        indexer = new Indexer(indexServo);
         blocker = new Blocker(blockerServo);
 ////        lights = new Lights(prism);
 //        distSensor = new DistanceSensor(distanceSensor);
 //        limelightCamera = new LimelightCamera(llHw, red ? 0 : 1);
 
-        CommandScheduler.getInstance().registerSubsystem(intake, shooter, turret, indexer, blocker);
+        CommandScheduler.getInstance().registerSubsystem(intake, shooter, turret, blocker);
 
         hubs = hm.getAll(LynxModule.class);
         for (LynxModule hub : hubs) {

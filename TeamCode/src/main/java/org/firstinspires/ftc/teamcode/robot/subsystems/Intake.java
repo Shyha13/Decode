@@ -16,7 +16,7 @@ public class Intake implements Subsystem {
         this.intakeMotor = intakeMotor;
         intakeMotor2.setCurrentAlert(4.5, CurrentUnit.AMPS);
         intakeMotor.setDirection(DcMotorSimple.Direction.REVERSE);
-        intakeMotor2.setDirection(DcMotorSimple.Direction.REVERSE);
+        intakeMotor2.setDirection(DcMotorSimple.Direction.FORWARD);
     }
 
     public void setState(IntakeState state){
