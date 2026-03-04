@@ -27,12 +27,15 @@ import org.firstinspires.ftc.teamcode.robot.Robot;
 import org.firstinspires.ftc.teamcode.robot.commands.botcommands.FollowPathCommand;
 import org.firstinspires.ftc.teamcode.robot.commands.botcommands.TransferCancelCommand;
 import org.firstinspires.ftc.teamcode.robot.commands.botcommands.TransferCommand;
+import org.firstinspires.ftc.teamcode.robot.commands.subsystemcommands.BlockerCommand;
 import org.firstinspires.ftc.teamcode.robot.commands.subsystemcommands.IntakeCommand;
 import org.firstinspires.ftc.teamcode.robot.commands.subsystemcommands.TurretCommand;
+import org.firstinspires.ftc.teamcode.robot.subsystems.Blocker;
 import org.firstinspires.ftc.teamcode.robot.subsystems.Intake;
 import org.firstinspires.ftc.teamcode.robot.subsystems.Shooter;
 import org.firstinspires.ftc.teamcode.robot.subsystems.Turret;
 import org.firstinspires.ftc.teamcode.utils.MyTelem;
+import org.firstinspires.ftc.teamcode.utils.constants.BotConstants;
 import org.firstinspires.ftc.teamcode.utils.constants.ShooterConstants;
 import org.firstinspires.ftc.teamcode.utils.constants.auto.AutoConstants;
 import org.firstinspires.ftc.teamcode.utils.constants.auto.CloseSideAutoPoseData;
@@ -56,30 +59,30 @@ public class ClosePath extends OpMode {
         robot = new Robot(hardwareMap, true, color);
         paths = new CloseSideAutoPaths(robot.follower, color);
 
-      /*  CommandScheduler.getInstance().schedule(
+       CommandScheduler.getInstance().schedule(
                 new SequentialCommandGroup(
                         new BlockerCommand(robot, Blocker.BlockerState.BLOCKED),
                         new TurretCommand(robot, Turret.TurretState.MATH)
                 )
         );
 
-       */
+
 
 
         auto = new SequentialCommandGroup(
                 new TurretCommand(robot, Turret.TurretState.MATH),
                 new IntakeCommand(robot, Intake.IntakeState.ON),
                 new FollowPathCommand(robot.follower, paths.preload),
-            //    shootThree(),
+                shootThree(),
                 new IntakeCommand(robot, Intake.IntakeState.ON),
                 new FollowPathCommand(robot.follower, paths.spike1),
                 new WaitCommand(500),
                 new FollowPathCommand(robot.follower, paths.shootInt),
-          //      shootThree(),
+                shootThree(),
                 new WaitCommand(300),
                 new FollowPathCommand(robot.follower, paths.spike2),
                 new FollowPathCommand(robot.follower, paths.return2),
-                //shootThree(),
+                shootThree(),
                 new WaitCommand(750),
                 new FollowPathCommand(robot.follower, paths.LeverPath),
                 new WaitCommand(50),
@@ -87,7 +90,7 @@ public class ClosePath extends OpMode {
                 new IntakeCommand(robot, Intake.IntakeState.ON),
                 new WaitCommand(500),
                 new FollowPathCommand(robot.follower, paths.LeverReturnPath),
-                //shootThree,
+                shootThree(),
                 new IntakeCommand(robot, Intake.IntakeState.ON),
                 new FollowPathCommand(robot.follower, paths.LeverPath2),
                 new WaitCommand(50),
@@ -98,7 +101,7 @@ public class ClosePath extends OpMode {
                         new FollowPathCommand(robot.follower, paths.LeverReturnPath2),
                         new IntakeCommand(robot, Intake.IntakeState.ON)
                 ),
-//                shootThree(),
+                shootThree(),
                 new IntakeCommand(robot, Intake.IntakeState.ON)
 //                new ParallelCommandGroup(
 //                        new FollowPathCommand(robot.follower, paths.spike1)
@@ -122,7 +125,7 @@ public class ClosePath extends OpMode {
 
     private CommandGroupBase shootThree() {
         return new SequentialCommandGroup(
-                new TransferCommand(robot),
+                new TransferCommand(robot, Shooter.ShooterState.TESTING),
                 new TransferCancelCommand(robot, Shooter.ShooterState.SPEEDING_UP),
                 new IntakeCommand(robot, Intake.IntakeState.ON)
         );
@@ -153,11 +156,11 @@ public class ClosePath extends OpMode {
 
         public CloseSideAutoPaths(Follower follower, String color) {
             Pose startPos = CloseSideAutoPoseData.mirror(CloseSideAutoPoseData.startPose, color);
-            Pose shootIntPos = CloseSideAutoPoseData.mirror(CloseSideAutoPoseData.shootInt, color);
+          //  Pose shootIntPos = CloseSideAutoPoseData.mirror(CloseSideAutoPoseData.shootInt, color);
             Pose shoot1Pos = CloseSideAutoPoseData.mirror(CloseSideAutoPoseData.shoot1, color);
             Pose shootPos = CloseSideAutoPoseData.mirror(CloseSideAutoPoseData.shoot, color);
             Pose s1Pos = CloseSideAutoPoseData.mirror(CloseSideAutoPoseData.s1, color);
-            Pose s2Con = CloseSideAutoPoseData.mirror(CloseSideAutoPoseData.s2Con, color);
+          //  Pose s2Con = CloseSideAutoPoseData.mirror(CloseSideAutoPoseData.s2Con, color);
             Pose s2Pos = CloseSideAutoPoseData.mirror(CloseSideAutoPoseData.s2, color);
             Pose s3Con = CloseSideAutoPoseData.mirror(CloseSideAutoPoseData.s3Con, color);
             Pose s3Pos = CloseSideAutoPoseData.mirror(CloseSideAutoPoseData.s3, color);

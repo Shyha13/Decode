@@ -69,10 +69,10 @@ public class Shooter implements Subsystem {
         }
     }
     public double setHood(double angleRad) {
-        double minAngle = ShooterMathConstants.HOOD_MIN_ANGLE; //0.32
+        double minAngle = ShooterMathConstants.HOOD_MIN_ANGLE; //0.71
         double maxAngle = ShooterMathConstants.HOOD_MAX_ANGLE; //0.17
         double servoHigh = 0.17;
-        double servoLow = 0.32;
+        double servoLow = 0.71;
         double loA = Math.min(minAngle, maxAngle);
         double hiA = Math.max(minAngle, maxAngle);
         angleRad = MathFunctions.clamp(angleRad, loA, hiA);

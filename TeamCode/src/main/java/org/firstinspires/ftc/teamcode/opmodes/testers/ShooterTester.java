@@ -35,6 +35,7 @@ public class ShooterTester extends LinearOpMode {
                         new IntakeCommand(robot, Intake.IntakeState.ON)
                 )
         );
+        
 
         gp1.getGamepadButton(GamepadKeys.Button.A).whenReleased(
                 new ParallelCommandGroup(
@@ -42,6 +43,7 @@ public class ShooterTester extends LinearOpMode {
                         new IntakeCommand(robot, Intake.IntakeState.OFF)
                 )
         );
+
         waitForStart();
 
         while (opModeIsActive()) {
