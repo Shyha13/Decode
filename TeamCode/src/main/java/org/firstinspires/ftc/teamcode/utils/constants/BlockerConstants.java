@@ -3,6 +3,6 @@ import com.acmerobotics.dashboard.config.Config;
 
 @Config
 public class BlockerConstants {
-    public static double Blocked = 0;
-    public static double Unblocked = 0.08;
+    public static double Blocked = 0.225;
+    public static double Unblocked = 0.355;
 }

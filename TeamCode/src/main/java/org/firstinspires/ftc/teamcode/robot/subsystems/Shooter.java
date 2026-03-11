@@ -26,14 +26,17 @@ import org.firstinspires.ftc.teamcode.utils.constants.ShooterMathConstants;
 
 public class Shooter implements Subsystem {
     DcMotorEx shooterMotor, shooterMotor2;
-    Servo hoodServo;
+    Servo hoodServo, hoodServo2;
     PIDController shooterRPMPID;
 
     public ShooterState state = ShooterState.STOP;
-    public Shooter(DcMotorEx shooterMotor, DcMotorEx shooterMotor2, Servo hoodServo){
+    public Shooter(DcMotorEx shooterMotor, DcMotorEx shooterMotor2, Servo hoodServo, Servo hoodServo2){
         this.hoodServo = hoodServo;
         shooterRPMPID = new PIDController(ShooterConstants.kp, ShooterConstants.ki, ShooterConstants.kd);
         shooterRPMPID.setTolerance(10);
+        this.hoodServo2 = hoodServo2;
+//        hoodServo.setDirection(Servo.Direction.REVERSE);
+        hoodServo2.setDirection(Servo.Direction.REVERSE);
         this.shooterMotor = shooterMotor;
         this.shooterMotor2 = shooterMotor2;
     }
@@ -59,7 +62,7 @@ public class Shooter implements Subsystem {
             case MATH:
                 double hoodAngle = Robot.getHoodAngle();
                 double hoodPos = setHood(hoodAngle);
-                double rpm = getRPM(Robot.getShooterMathRPM(), hoodPos);
+                double rpm = getRPM(Robot.getShooterMathRPM(), Math.toDegrees(hoodAngle));
                 setHood(hoodAngle);
                 currentVelocity = rpm;
                 MyTelem.addData("HOOD ANGLE", hoodAngle);
@@ -71,8 +74,8 @@ public class Shooter implements Subsystem {
     public double setHood(double angleRad) {
         double minAngle = ShooterMathConstants.HOOD_MIN_ANGLE; //0.71
         double maxAngle = ShooterMathConstants.HOOD_MAX_ANGLE; //0.17
-        double servoHigh = 0.17;
-        double servoLow = 0.71;
+        double servoHigh = 0.38;
+        double servoLow = 0.07;
         double loA = Math.min(minAngle, maxAngle);
         double hiA = Math.max(minAngle, maxAngle);
         angleRad = MathFunctions.clamp(angleRad, loA, hiA);
@@ -81,11 +84,12 @@ public class Shooter implements Subsystem {
     }
     public double getRPM(double velocity, double hood){
         MyTelem.addData("VELOCITY", velocity);
-        double hoodMultiplier = 2.79242 * hood * hood - 2.05502 * hood + 1.29534;
-        double baseRPM = 24.27316 * velocity - 1943.16341;
-        MyTelem.addData("HOOD MULTIPLIER", hoodMultiplier);
+        double multiplier = hood * -0.00430411 + 1.21301;
+        double baseRPM = 25.94395 * velocity - 2297.67116;
+        MyTelem.addData("HOOD MULTIPLIER", multiplier);
         MyTelem.addData("BASE RPM", baseRPM);
-        return baseRPM * hoodMultiplier;
+        return baseRPM * multiplier
+                ;
     }
 
     public double ticksPerSecToRPM(double tps){
@@ -129,6 +133,8 @@ public class Shooter implements Subsystem {
 //        }
 //        else {
             hoodServo.setPosition(hoodServoPosition);
+            hoodServo2.setPosition(hoodServoPosition);
+
 //        }
 //        if (karthikstfu && Robot.auto) {
 //            setShooterPIDPower(speedingVelocity);

@@ -8,15 +8,15 @@ public class AutoConstants {
     public static double finalShootHeading = 225;
     public static double startHeading = 322.78;
 
-    public static double nStart = 318.08;
+    public static double nStart = 270;
     public static double shootingAngle = 180;
     public static double shootingX = 64;
     public static double shootingY = 80;
     public static double leverYNew = 63.25;
     public static double leverIntakeX = 13;
     public static double leverIntakeY = 57;
-    public static double startX = 23.448;
-    public static double startY = 126.26;
+    public static double startX = 34.25;
+    public static double startY = 134;
     public static double leverX = 13.5;
     public static double leverY = 63.25;
 

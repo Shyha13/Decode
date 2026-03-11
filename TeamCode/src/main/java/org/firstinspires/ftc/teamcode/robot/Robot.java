@@ -55,7 +55,7 @@ public class  Robot {
     DcMotorEx backLeftMotor, backRightMotor, frontLeftMotor, frontRightMotor;
     DcMotorEx topShooterMotor, bottomShooterMotor, counterRoller;
     DcMotorEx intakeMotor, intakeMotor2;
-    Servo hoodServo, indexServo;
+\    Servo hood1,hood2;
     Servo turretLeftServo, turretRightServo, blockerServo;
     public Indexer indexer;
     // all subsystem classes
@@ -94,7 +94,8 @@ public class  Robot {
 //        indexServo = hm.get(Servo.class, "indexServo");
         topShooterMotor = hm.get(DcMotorEx.class, "flywheel1");
         bottomShooterMotor = hm.get(DcMotorEx.class, "flywheel2");
-        hoodServo = hm.get(Servo.class, "hood");
+        hood1 = hm.get(Servo.class, "hood1");
+        hood2 = hm.get(Servo.class, "hood2");
         intakeMotor = hm.get(DcMotorEx.class, "intake");
         intakeMotor2 = hm.get(DcMotorEx.class, "transfer");
         turretLeftServo = hm.get(Servo.class, "turret1");
@@ -114,11 +115,11 @@ public class  Robot {
             if(currentPose != null)
                 follower.setStartingPose(currentPose);
             else
-                follower.setStartingPose(new Pose(0,0,0));
+                follower.setStartingPose(new Pose(72,72,0));
         }
 
         intake = new Intake(intakeMotor, intakeMotor2);
-        shooter = new Shooter(topShooterMotor, bottomShooterMotor, hoodServo);
+        shooter = new Shooter(topShooterMotor, bottomShooterMotor, hood1, hood2);
         turret = new Turret(turretLeftServo, turretRightServo);
 //        kicker = new Kicker(kickerRightServo, kickerLeftServo);
 //        indexer = new Indexer(indexServo);
@@ -234,10 +235,10 @@ public class  Robot {
 
     public static Pose getGoalPoseLong(){
         if(red){
-            return new Pose(144-14.5, 144-12);
+            return new Pose(144, 144);
         }
         else{
-            return new Pose(14.5, 144-12
+            return new Pose(0, 144
             );
         }
     }
